@@ -53,6 +53,17 @@ Ekranlar doğrudan `PHAsset` sorgulamaz. `PhotoLibraryClient` izin, fetch, thumb
 - `localIdentifier` mümkün olan en kısa süre tutulur; analitik, hata raporu veya export içine yazılmaz.
 - Dosya boyutu PhotoKit/iCloud durumuna göre tahmini veya erişilemez olabilir. UI, toplam kazanımı "tahmini" olarak sunar ve belirsiz öğeleri ayrı belirtir.
 
+## Satın alma ve Pro erişimi
+
+- Dijital Pro erişimi yalnızca Apple In-App Purchase üzerinden, süresi dolmayan `non-consumable` ürün olarak satılır.
+- Uygulama kart numarası, ödeme yöntemi veya fatura bilgisi toplamaz; ödeme arayüzü ve tahsilat Apple tarafından yönetilir.
+- Ürün fiyatı uygulama içine sabit yazılmaz; App Store'un cihaz bölgesine göre döndürdüğü yerelleştirilmiş fiyat gösterilir.
+- Pro hakkı yalnızca doğrulanmış App Store işlemiyle açılır. İptal, bekleyen işlem ve hata durumları başarılı satın alma gibi değerlendirilmez.
+- Satın alımı geri yükleme kullanıcıya görünür bir aksiyon olarak sunulur ve uygulama yeniden kurulduğunda hak tekrar sorgulanır.
+- İlk sürümde kendi ödeme backend'i kurulmaz. Basit hak kontrolü StoreKit işlemleriyle cihazda yapılır; sunucu doğrulaması veya App Store Server Notifications ancak ölçülmüş dolandırıcılık ya da destek ihtiyacı oluşursa ayrı ADR ile değerlendirilir.
+- Native satın alma paketi Expo Go'da çalışmadığından entegrasyon development build, StoreKit sandbox ve TestFlight üzerinde doğrulanır.
+- Ücretsiz temizlik limiti yapılandırılmadan önce ürün kararı kesinleştirilir; tahmini alanın kesin kota gibi kullanılmasından doğacak sınır durumları test edilir.
+
 ## Mühendislik kuralları
 
 - View'lar tek sorumlulukla sınırlı olur; PhotoKit, Vision, depolama ve ödeme ayrıntıları ViewModel/servis katmanında kalır.

@@ -64,8 +64,11 @@ Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe b
 
 ## P1 — Gelir modeli ve yayın hazırlığı
 
-- [ ] Ücretsiz tarama ile ücretli cleanup/abonelik sınırını kullanıcı değeri, App Store politikası ve fiyat hipoteziyle tanımla.
-- [ ] StoreKit 2 paywall, satın alma, geri yükleme, deneme ve abonelik yönetimi tasarımını hazırla.
+- [x] Ücretsiz tarama/inceleme ve tek seferlik Phone Cleaner Pro modelini ürün ve mimari dokümanlarında tanımla.
+- [ ] Ücretsiz temizlik limitini (alan veya öğe sayısı), fiyat hipotezini ve paywall gösterim anını kullanıcı denemeleriyle kesinleştir.
+- [ ] App Store Connect'te `non-consumable` Pro ürününü ve Paid Apps sözleşme/banka/vergi gereksinimlerini hazırla.
+- [ ] Native IAP paketiyle ürün sorgulama, satın alma, hak kontrolü ve satın alımı geri yükleme akışını uygula.
+- [ ] İptal, bekleyen işlem, çevrimdışı kullanım, yeniden kurulum ve iade senaryolarını StoreKit sandbox/TestFlight üzerinde doğrula.
 - [ ] İkon, ekran görüntüleri, App Store açıklaması, destek sayfası ve yaş derecelendirmesini hazırla.
 - [ ] TestFlight dağıtımı, sürüm notu, hata takibi ve geri alma prosedürünü tanımla.
 
