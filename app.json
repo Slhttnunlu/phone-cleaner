@@ -2,6 +2,7 @@
   "expo": {
     "name": "Phone Cleaner",
     "slug": "phone-cleaner",
+    "icon": "./assets/icon.png",
     "description": "Fotoğraf kütüphanenizde yer açmanıza yardımcı olan cihaz içi iPhone uygulaması.",
     "scheme": "phonecleaner",
     "version": "0.1.0",

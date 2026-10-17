@@ -177,6 +177,7 @@ function AppContent() {
       <SafeAreaView style={styles.safeArea}>
         <StatusBar style="dark" />
         <View style={styles.permissionContainer}>
+          <AppMark />
           <Text style={styles.eyebrow}>PHONE CLEANER</Text>
           <Text style={styles.title}>Galerinizde yer açın.</Text>
           <Text style={styles.body}>
@@ -270,6 +271,7 @@ function AppContent() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
       <View style={styles.screen}>
+        <AppMark compact />
         <Text style={styles.eyebrow}>PHONE CLEANER</Text>
         <Text style={styles.title}>Nerede yer açabileceğinizi görün.</Text>
         <Text style={styles.body}>{scanMessage}</Text>
@@ -315,6 +317,16 @@ function AppContent() {
         <Text style={styles.footnote}>Alan hesapları iCloud ve iOS kütüphane durumuna göre tahminidir.</Text>
       </View>
     </SafeAreaView>
+  );
+}
+
+function AppMark({ compact = false }) {
+  return (
+    <Image
+      source={require('./assets/icon.png')}
+      style={[styles.appMark, compact && styles.appMarkCompact]}
+      accessibilityLabel="Phone Cleaner uygulama simgesi"
+    />
   );
 }
 
@@ -448,6 +460,8 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F7FAF5' },
   screen: { flex: 1, padding: 20 },
   permissionContainer: { flex: 1, justifyContent: 'center', padding: 28, gap: 18 },
+  appMark: { borderRadius: 24, height: 96, width: 96 },
+  appMarkCompact: { alignSelf: 'flex-start', borderRadius: 16, height: 56, marginBottom: 20, width: 56 },
   eyebrow: { color: '#347C4B', fontSize: 12, fontWeight: '800', letterSpacing: 1.2 },
   title: { color: '#17301F', fontSize: 34, fontWeight: '800', letterSpacing: -0.8, marginTop: 8 },
   sectionTitle: { color: '#17301F', fontSize: 28, fontWeight: '800', letterSpacing: -0.5, marginTop: 24 },
