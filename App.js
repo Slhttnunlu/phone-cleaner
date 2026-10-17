@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   Linking,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -50,6 +51,7 @@ function AppContent() {
   const [activeCategory, setActiveCategory] = useState(null);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [cleanupResult, setCleanupResult] = useState(null);
+  const [previewAsset, setPreviewAsset] = useState(null);
 
   const visibleAssets = useMemo(
     () => (activeCategory ? assetsByCategory[activeCategory] : []),
@@ -224,6 +226,9 @@ function AppContent() {
           </View>
           <Text style={styles.sectionTitle}>{CATEGORY_CONFIG[activeCategory].title}</Text>
           <Text style={styles.body}>{CATEGORY_CONFIG[activeCategory].description}</Text>
+          {activeCategory !== 'largeVideos' ? (
+            <Text style={styles.previewHint}>Büyütmek için fotoğrafa basılı tutun.</Text>
+          ) : null}
           <FlatList
             data={visibleAssets}
             keyExtractor={(asset) => asset.id}
@@ -236,6 +241,10 @@ function AppContent() {
                 <Pressable
                   style={[styles.asset, selected && styles.assetSelected]}
                   onPress={() => toggleAsset(item.id)}
+                  onLongPress={
+                    activeCategory !== 'largeVideos' ? () => setPreviewAsset(item) : undefined
+                  }
+                  delayLongPress={350}
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: selected }}
                   accessibilityLabel={`Tahmini ${formatBytes(estimateAssetBytes(item))} boyutunda medya`}
@@ -262,6 +271,12 @@ function AppContent() {
                 : 'Silmek için öğe seçin'}
             </Text>
           </Pressable>
+          <PhotoPreviewModal
+            asset={previewAsset}
+            selected={previewAsset ? selectedIds.has(previewAsset.id) : false}
+            onClose={() => setPreviewAsset(null)}
+            onToggle={() => previewAsset && toggleAsset(previewAsset.id)}
+          />
         </View>
       </SafeAreaView>
     );
@@ -447,6 +462,72 @@ function AssetThumbnail({ asset }) {
   );
 }
 
+function PhotoPreviewModal({ asset, selected, onClose, onToggle }) {
+  const [previewUri, setPreviewUri] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPreview() {
+      if (!asset) return;
+      setPreviewUri(asset.uri?.startsWith('file://') ? asset.uri : null);
+      setLoading(true);
+      try {
+        const info = await MediaLibrary.getAssetInfoAsync(asset, {
+          shouldDownloadFromNetwork: true,
+        });
+        if (!cancelled && info.localUri?.startsWith('file://')) {
+          setPreviewUri(info.localUri);
+        }
+      } catch {
+        // Önizleme alınamazsa kullanıcı güvenli hata durumunu görür.
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadPreview();
+    return () => {
+      cancelled = true;
+    };
+  }, [asset]);
+
+  return (
+    <Modal visible={Boolean(asset)} animationType="fade" transparent onRequestClose={onClose}>
+      <View style={styles.previewBackdrop}>
+        <Pressable
+          style={styles.previewClose}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel="Önizlemeyi kapat"
+        >
+          <Text style={styles.previewCloseText}>×</Text>
+        </Pressable>
+        {previewUri ? (
+          <Image source={{ uri: previewUri }} style={styles.previewImage} resizeMode="contain" />
+        ) : (
+          <View style={styles.previewLoading}>
+            {loading ? <ActivityIndicator size="large" color="#D9F45D" /> : null}
+            <Text style={styles.previewLoadingText}>
+              {loading ? 'Fotoğraf hazırlanıyor…' : 'Bu fotoğrafın önizlemesi açılamadı.'}
+            </Text>
+          </View>
+        )}
+        <Pressable
+          style={[styles.previewSelectButton, selected && styles.previewSelectedButton]}
+          onPress={onToggle}
+          accessibilityRole="button"
+        >
+          <Text style={styles.previewSelectButtonText}>
+            {selected ? 'Seçimi kaldır' : 'Silmek için seç'}
+          </Text>
+        </Pressable>
+      </View>
+    </Modal>
+  );
+}
+
 function CleanupSuccessScreen({ result, onComplete }) {
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -540,6 +621,7 @@ const styles = StyleSheet.create({
   headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   backButton: { color: '#347C4B', fontSize: 16, fontWeight: '800' },
   textButton: { color: '#347C4B', fontSize: 14, fontWeight: '800' },
+  previewHint: { color: '#718078', fontSize: 12, fontWeight: '600', marginTop: 8 },
   grid: { gap: 6, paddingTop: 18, paddingBottom: 88 },
   asset: { aspectRatio: 1, borderRadius: 10, margin: 2, overflow: 'hidden', width: '31.9%' },
   assetSelected: { borderColor: '#347C4B', borderWidth: 3 },
@@ -551,4 +633,13 @@ const styles = StyleSheet.create({
   emptyText: { color: '#718078', fontSize: 16, paddingTop: 40, textAlign: 'center' },
   deleteButton: { alignItems: 'center', backgroundColor: '#C7473A', borderRadius: 16, bottom: 18, left: 20, padding: 17, position: 'absolute', right: 20 },
   deleteButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800' },
+  previewBackdrop: { alignItems: 'center', backgroundColor: 'rgba(8, 18, 11, 0.96)', flex: 1, justifyContent: 'center' },
+  previewClose: { alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.14)', borderRadius: 22, height: 44, justifyContent: 'center', position: 'absolute', right: 20, top: 58, width: 44, zIndex: 2 },
+  previewCloseText: { color: '#FFFFFF', fontSize: 32, fontWeight: '300', lineHeight: 34 },
+  previewImage: { height: '72%', width: '100%' },
+  previewLoading: { alignItems: 'center', gap: 16, padding: 32 },
+  previewLoadingText: { color: '#FFFFFF', fontSize: 15, textAlign: 'center' },
+  previewSelectButton: { alignItems: 'center', backgroundColor: '#D9F45D', borderRadius: 24, bottom: 42, left: 24, padding: 17, position: 'absolute', right: 24 },
+  previewSelectedButton: { backgroundColor: '#FFFFFF' },
+  previewSelectButtonText: { color: '#17301F', fontSize: 16, fontWeight: '800' },
 });
