@@ -25,9 +25,9 @@ const PAGE_SIZE = 100;
 const MINIMUM_SCAN_DURATION_MS = 3500;
 
 const CATEGORY_CONFIG = {
-  screenshots: { title: 'Ekran görüntüleri', description: 'Genellikle bir kez kullanılan görseller' },
-  largePhotos: { title: 'Yüksek çözünürlüklü fotoğraflar', description: '12 MP ve üzerindeki fotoğraflar' },
-  largeVideos: { title: 'Uzun videolar', description: '60 saniye ve üzerindeki videolar' },
+  screenshots: { title: 'Ekran görüntüleri', description: 'Genellikle bir kez kullanılan görseller', icon: '▦' },
+  largePhotos: { title: 'Yüksek çözünürlük', description: '12 MP ve üzerindeki fotoğraflar', icon: '◎' },
+  largeVideos: { title: 'Uzun videolar', description: '60 saniye ve üzerindeki videolar', icon: '▷' },
 };
 
 export default function App() {
@@ -271,10 +271,30 @@ function AppContent() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
       <View style={styles.screen}>
-        <AppMark compact />
-        <Text style={styles.eyebrow}>PHONE CLEANER</Text>
-        <Text style={styles.title}>Nerede yer açabileceğinizi görün.</Text>
-        <Text style={styles.body}>{scanMessage}</Text>
+        <View style={styles.topBar}>
+          <View style={styles.brandLockup}>
+            <AppMark compact />
+            <Text style={styles.eyebrow}>PHONE CLEANER</Text>
+          </View>
+          <Text style={styles.localBadge}>Cihazında</Text>
+        </View>
+        <View style={styles.heroCard}>
+          <View style={styles.heroCopy}>
+            <Text style={styles.heroKicker}>AKILLI TARAMA</Text>
+            <Text style={styles.heroTitle}>Yer açmaya{`\n`}hazır mısın?</Text>
+            <Text style={styles.heroBody}>{scanMessage}</Text>
+          </View>
+          <Pressable
+            style={[styles.scanButton, isScanning && styles.disabledButton]}
+            onPress={scanLibrary}
+            disabled={isScanning}
+            accessibilityRole="button"
+            accessibilityLabel="Galeriyi tara"
+          >
+            <Text style={styles.scanButtonIcon}>→</Text>
+            <Text style={styles.scanButtonText}>Tara</Text>
+          </Pressable>
+        </View>
         {permission.accessPrivileges === 'limited' ? (
           <View style={styles.limitedBanner}>
             <Text style={styles.limitedBannerText}>
@@ -288,29 +308,29 @@ function AppContent() {
             </Pressable>
           </View>
         ) : null}
-        <Pressable
-          style={[styles.primaryButton, isScanning && styles.disabledButton]}
-          onPress={scanLibrary}
-          disabled={isScanning}
-          accessibilityRole="button"
-        >
-          <Text style={styles.primaryButtonText}>Galeriyi tara</Text>
-        </Pressable>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionLabel}>İncelenecekler</Text>
+          <Text style={styles.sectionMeta}>3 kategori</Text>
+        </View>
         <View style={styles.cards}>
           {Object.entries(CATEGORY_CONFIG).map(([key, config]) => {
             const assets = assetsByCategory[key];
-            const bytes = calculateEstimatedBytes(assets);
-            return (
-              <Pressable key={key} style={styles.card} onPress={() => openCategory(key)} accessibilityRole="button">
-                <View style={styles.cardContent}>
-                  <Text style={styles.cardTitle}>{config.title}</Text>
-                  <Text style={styles.cardDescription}>{config.description}</Text>
-                </View>
-                <View style={styles.cardStats}>
-                  <Text style={styles.cardCount}>{assets.length}</Text>
-                  <Text style={styles.cardSize}>{formatBytes(bytes)}</Text>
-                </View>
-              </Pressable>
+              const bytes = calculateEstimatedBytes(assets);
+              return (
+                <Pressable key={key} style={styles.card} onPress={() => openCategory(key)} accessibilityRole="button">
+                  <View style={styles.categoryIcon}>
+                    <Text style={styles.categoryIconText}>{config.icon}</Text>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <Text style={styles.cardTitle}>{config.title}</Text>
+                    <Text style={styles.cardDescription}>{config.description}</Text>
+                  </View>
+                  <View style={styles.cardStats}>
+                    <Text style={styles.cardCount}>{assets.length}</Text>
+                    <Text style={styles.cardSize}>{formatBytes(bytes)}</Text>
+                  </View>
+                  <Text style={styles.cardChevron}>›</Text>
+                </Pressable>
             );
           })}
         </View>
@@ -461,12 +481,12 @@ const styles = StyleSheet.create({
   screen: { flex: 1, padding: 20 },
   permissionContainer: { flex: 1, justifyContent: 'center', padding: 28, gap: 18 },
   appMark: { borderRadius: 24, height: 96, width: 96 },
-  appMarkCompact: { alignSelf: 'flex-start', borderRadius: 16, height: 56, marginBottom: 20, width: 56 },
+  appMarkCompact: { borderRadius: 15, height: 48, width: 48 },
   eyebrow: { color: '#347C4B', fontSize: 12, fontWeight: '800', letterSpacing: 1.2 },
   title: { color: '#17301F', fontSize: 34, fontWeight: '800', letterSpacing: -0.8, marginTop: 8 },
   sectionTitle: { color: '#17301F', fontSize: 28, fontWeight: '800', letterSpacing: -0.5, marginTop: 24 },
   body: { color: '#526158', fontSize: 16, lineHeight: 23 },
-  primaryButton: { alignItems: 'center', backgroundColor: '#D9F45D', borderRadius: 16, marginTop: 24, padding: 17 },
+  primaryButton: { alignItems: 'center', backgroundColor: '#D9F45D', borderRadius: 24, marginTop: 24, padding: 17 },
   primaryButtonText: { color: '#17301F', fontSize: 16, fontWeight: '800' },
   scanningContainer: { alignItems: 'center', flex: 1, justifyContent: 'center', padding: 28 },
   scanningAnimation: { alignItems: 'center', height: 174, justifyContent: 'center', marginVertical: 36, width: 174 },
@@ -482,6 +502,20 @@ const styles = StyleSheet.create({
   recentlyDeletedCard: { backgroundColor: '#FFFFFF', borderRadius: 18, marginTop: 30, padding: 20 },
   recentlyDeletedTitle: { color: '#17301F', fontSize: 16, fontWeight: '800', marginBottom: 10 },
   recentlyDeletedText: { color: '#526158', fontSize: 14, lineHeight: 21, marginTop: 8 },
+  topBar: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+  brandLockup: { alignItems: 'center', flexDirection: 'row', gap: 10 },
+  localBadge: { backgroundColor: '#E9F0E7', borderRadius: 14, color: '#52705B', fontSize: 12, fontWeight: '700', overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 6 },
+  heroCard: { backgroundColor: '#17301F', borderRadius: 30, minHeight: 244, overflow: 'hidden', padding: 24, position: 'relative' },
+  heroCopy: { paddingRight: 90 },
+  heroKicker: { color: '#CDE6B0', fontSize: 11, fontWeight: '800', letterSpacing: 1.1 },
+  heroTitle: { color: '#FFFFFF', fontSize: 31, fontWeight: '800', letterSpacing: -0.8, lineHeight: 36, marginTop: 10 },
+  heroBody: { color: '#C7D3C9', fontSize: 13, lineHeight: 19, marginTop: 10 },
+  scanButton: { alignItems: 'center', backgroundColor: '#D9F45D', borderRadius: 40, bottom: 22, height: 80, justifyContent: 'center', position: 'absolute', right: 22, width: 80 },
+  scanButtonIcon: { color: '#17301F', fontSize: 24, fontWeight: '500', lineHeight: 25 },
+  scanButtonText: { color: '#17301F', fontSize: 12, fontWeight: '800' },
+  sectionHeader: { alignItems: 'baseline', flexDirection: 'row', justifyContent: 'space-between', marginTop: 27 },
+  sectionLabel: { color: '#17301F', fontSize: 18, fontWeight: '800', letterSpacing: -0.3 },
+  sectionMeta: { color: '#718078', fontSize: 12, fontWeight: '700' },
   limitedBanner: {
     backgroundColor: '#EAF4D5',
     borderRadius: 14,
@@ -491,14 +525,17 @@ const styles = StyleSheet.create({
   limitedBannerText: { color: '#36513B', fontSize: 13, lineHeight: 18 },
   limitedBannerAction: { color: '#347C4B', fontSize: 13, fontWeight: '800', marginTop: 8 },
   disabledButton: { opacity: 0.45 },
-  cards: { gap: 12, marginTop: 28 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 18, minHeight: 142, padding: 18, position: 'relative' },
-  cardContent: { paddingRight: 116 },
+  cards: { gap: 10, marginTop: 13 },
+  card: { alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 22, flexDirection: 'row', minHeight: 94, padding: 14, position: 'relative' },
+  categoryIcon: { alignItems: 'center', backgroundColor: '#EAF4D5', borderRadius: 18, height: 48, justifyContent: 'center', marginRight: 13, width: 48 },
+  categoryIconText: { color: '#347C4B', fontSize: 25, fontWeight: '700', lineHeight: 28 },
+  cardContent: { flex: 1, paddingRight: 8 },
   cardTitle: { color: '#17301F', flexShrink: 1, fontSize: 17, fontWeight: '800', lineHeight: 22 },
   cardDescription: { color: '#718078', flexShrink: 1, fontSize: 13, lineHeight: 18, marginTop: 4 },
-  cardStats: { alignItems: 'flex-end', position: 'absolute', right: 18, top: 18, width: 96 },
-  cardCount: { color: '#17301F', fontSize: 20, fontWeight: '800' },
+  cardStats: { alignItems: 'flex-end', marginRight: 11, width: 62 },
+  cardCount: { color: '#17301F', fontSize: 19, fontWeight: '800' },
   cardSize: { color: '#347C4B', fontSize: 13, fontWeight: '700', marginTop: 2 },
+  cardChevron: { color: '#A9B8AC', fontSize: 28, fontWeight: '400', marginTop: -3 },
   footnote: { color: '#718078', fontSize: 12, lineHeight: 17, marginTop: 'auto', paddingVertical: 10 },
   headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   backButton: { color: '#347C4B', fontSize: 16, fontWeight: '800' },
