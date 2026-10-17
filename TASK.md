@@ -1,0 +1,79 @@
+# Phone Cleaner — Ürün görevleri
+
+Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe başlamadan önce ilgili madde alt görevlere ayrılır; durum yalnızca kod ve doğrulama tamamlandığında güncellenir.
+
+## Mevcut durum — 17 Ekim 2026
+
+### Kodlanmış ve otomatik doğrulanmış
+
+- [x] Expo iOS uygulama kabuğu, uygulama kimliği ve Photos izin metinleri
+- [x] Tam/reddedilmiş/sınırlı Photos izni için temel ekranlar ve sınırlı erişim seçimini düzenleme yolu
+- [x] Screenshots, 12 MP+ fotoğraflar ve 60 sn+ videolar için yerel tarama kategorileri
+- [x] Taramada tam ekran animasyon; sonuç görünmeden önce en az 3,5 saniye bekleme
+- [x] Kategori inceleme, görsel grid, tekli/toplu seçim ve tahmini alan hesabı
+- [x] Kullanıcının seçimi sonrası `deleteAssetsAsync` ile iOS sistem onaylı silme isteği
+- [x] Lint, 6 birim/UI testi ve iOS Expo export paketi
+- [x] EAS preview/production yapılandırması ile gerçek cihaz ve TestFlight yayın kontrol listeleri
+- [x] Expo Go ile gerçek iPhone smoke testi: iki ekran görüntüsü seçildi, iOS sistem silme onayı verildi ve başarı sonucu görüldü
+
+### Gerçek cihaz veya yayın erişimi gerektiren doğrulamalar
+
+- [ ] iPhone'da tam/sınırlı/reddedilmiş izin, boş/iCloud kütüphane ve silme iptalinin tüm kabul senaryoları
+- [ ] Gerçek iCloud kütüphanesinde boyut tahmini, uzun tarama ve uygulama performansı
+- [ ] VoiceOver/dinamik metin/kontrast denetimi
+- [ ] Apple Developer/EAS hesabı ile TestFlight build, App Store Connect kaydı ve mağaza varlıkları
+
+> Not: Aşağıdaki P0/P1 görevleri, ilgili kabul kriterleri gerçek cihazda veya yayın ortamında tamamlanmadan işaretlenmez.
+
+## P0 — Ürün ve güvenlik temeli
+
+- [ ] Hedef kullanıcı, ana problem, MVP sınırı ve başarı metriklerini `docs/PRODUCT.md` içinde kesinleştir.
+- [ ] Uygulama adı, bundle identifier, iOS deployment target ve desteklenen cihazları belirle.
+- [ ] App Privacy beyanı, gizlilik politikası, destek kanalı ve silme davranışı taslağını hazırla.
+- [ ] İçeriksiz analitik olay sözleşmesini tanımla; fotoğraf, video, dosya adı, konum ve varlık kimliğini yasakla.
+- [ ] SwiftLint/SwiftFormat, birim test ve UI test temelini; CI'da build + test kapısını kur.
+
+## P0 — Yerel tarama MVP'si
+
+- [ ] SwiftUI uygulama kabuğu, onboarding, ana özet ekranı ve ayarları oluştur.
+- [ ] Photo Library için tam, sınırlı, reddedilmiş ve değişmiş izin durumlarını yönet.
+- [ ] Fotoğraf ve video varlıklarını akışı kesmeden, iptal edilebilir biçimde tara.
+- [ ] Screenshots kategorisini PhotoKit metadata'sı ile listele.
+- [ ] Büyük videoları süre, piksel boyutu ve erişilebilen kaynak boyutuna göre sırala; boyut güvenilir değilse kullanıcıya açıkla.
+- [ ] Büyük fotoğrafları güvenli bir eşik ve tahmini alan bilgisiyle listele.
+- [ ] Aynı içerik için kesin tekrar adaylarını tanımla; yanlış pozitif riskini belgeleyip gerçek cihaz testleriyle doğrula.
+- [ ] Kategori, öğe ve grup bazında önizleme; seçim ve seçimin yaklaşık alan etkisini ekle.
+- [ ] Kullanıcının seçtiği varlıklar için PhotoKit silme isteği oluştur; sistem onayı, iptal, hata ve başarı sonucunu yönet.
+- [ ] Tarama başlangıcı/bitişi, izin durumu, boş kütüphane, iCloud varlığı, iptal ve bellek baskısı için görünür durumlar ekle.
+
+## P0 — Kalite ve kabul
+
+- [ ] Saf sınıflandırma, sıralama, alan toplama ve grup kuralları için birim testleri yaz.
+- [ ] İzin → tarama → inceleme → sistem silme onayı öncesi akışı UI testiyle kapsa.
+- [ ] Gerçek iPhone'da tam/sınırlı/reddedilmiş izin, boş kütüphane, 10.000+ varlık, iCloud optimize edilmiş medya ve silme sonrası yenileme testlerini tamamla.
+- [ ] VoiceOver, dinamik metin, kontrast, odak sırası ve minimum dokunma alanları için erişilebilirlik denetimi yap.
+- [ ] Tarama süresi, bellek, enerji ve ana iş parçacığı kullanımını ölç; kabul sınırlarını `docs/ARCHITECTURE.md` içinde kaydet.
+
+## P1 — Akıllı öneriler
+
+- [ ] Vision feature print ile benzer fotoğraf adayları için deney tasarla; cihaz, kütüphane boyutu ve doğruluk ölçümünü belirle.
+- [ ] Bulanıklık/kalite puanı için açıklanabilir bir yerel heuristik veya Vision yaklaşımı seç; yanıltıcı öneri riskini test et.
+- [ ] Her benzer grup için varsayılan korunan öğeyi ve kullanıcının bunu değiştirebilmesini tasarla.
+- [ ] Analiz önbelleğinin sürümleme, iptal, kütüphane değişikliği ve disk sınırını uygula.
+- [ ] Gerçek kullanıcı doğrulaması olmadan benzer/bulanık kategorilerini varsayılan açık yapma.
+
+## P1 — Gelir modeli ve yayın hazırlığı
+
+- [ ] Ücretsiz tarama ile ücretli cleanup/abonelik sınırını kullanıcı değeri, App Store politikası ve fiyat hipoteziyle tanımla.
+- [ ] StoreKit 2 paywall, satın alma, geri yükleme, deneme ve abonelik yönetimi tasarımını hazırla.
+- [ ] İkon, ekran görüntüleri, App Store açıklaması, destek sayfası ve yaş derecelendirmesini hazırla.
+- [ ] TestFlight dağıtımı, sürüm notu, hata takibi ve geri alma prosedürünü tanımla.
+
+## Production'a çıkış kriterleri
+
+- [ ] P0 kapsamı tamamlandı; CI build ve testleri yeşil.
+- [ ] Tüm silme işlemleri yalnızca kullanıcının görünür seçimi ve iOS sistem onayıyla gerçekleşiyor.
+- [ ] Tam, sınırlı ve reddedilmiş Fotoğraflar izni gerçek cihazlarda doğrulandı.
+- [ ] Büyük/iCloud kütüphanelerinde uygulama çökmüyor, kullanıcı iptal edebiliyor ve sonuçlar anlaşılır.
+- [ ] Gizlilik politikası, App Privacy beyanı, destek kanalı ve crash reporting hazır.
+- [ ] Paywall varsa satın alma, geri yükleme ve abonelik yönetimi App Review yönergelerine uygun doğrulandı.

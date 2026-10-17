@@ -1,0 +1,18 @@
+# Dependencies and Expo local state
+node_modules/
+.expo/
+
+# Build and test output
+dist/
+coverage/
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.p8
+*.mobileprovision
+
+# Operating system files
+.DS_Store
