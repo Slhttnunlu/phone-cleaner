@@ -7,6 +7,7 @@ PhotoKit ve Vision ile çalışan, iPhone fotoğraf kütüphanesindeki alan tük
 ```bash
 npm install
 npm run start -- --clear
+npx expo run:ios --device --configuration Release
 ```
 
 Ardından Expo Go ile QR kodu okutun. Bu ilk Expo sürümünde gerçek dosya boyutu yerine çözünürlük ve süreye dayalı **tahmini** alan kullanılır; bu nedenle iPhone'da gerçek kütüphaneyle doğrulanmalıdır.
@@ -63,7 +64,7 @@ Sınırlı fotoğraf erişiminde yalnızca kullanıcının seçtiği varlıklar 
 - Tarama özeti ve kullanıcı tercihleri için cihaz içi kalıcı depolama; ham medya veya fotoğraf içerikleri saklanmaz
 - Ağ erişimi olmadan çalışacak şekilde tasarım
 
-Ayrıntılı bileşen sınırları ve performans kararları [mimari dokümanında](docs/ARCHITECTURE.md), iş sırası ise [TASK.md](TASK.md) içinde bulunur.
+Ayrıntılı bileşen sınırları ve performans kararları [mimari dokümanında](docs/ARCHITECTURE.md), kabul edilen ticari yön ve farklılaşma kararları [ürün stratejisinde](docs/PRODUCT_STRATEGY.md), iş sırası ise [TASK.md](TASK.md) içinde bulunur.
 
 ## Geliştirme ilkeleri
 
@@ -110,4 +111,4 @@ Kod eklendiğinde en az şu kontroller yapılır:
 
 Detaylı kabul senaryoları [docs/ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md) içindedir.
 
-Gerçek cihaz test kaydı [docs/REAL_DEVICE_TEST.md](docs/REAL_DEVICE_TEST.md), TestFlight/App Store yayın adımları ise [docs/RELEASE_OPERATIONS.md](docs/RELEASE_OPERATIONS.md) içindedir.
+Gerçek cihaz test kaydı [docs/REAL_DEVICE_TEST.md](docs/REAL_DEVICE_TEST.md), güncel TestFlight hazırlık özeti [docs/TESTFLIGHT_READINESS.md](docs/TESTFLIGHT_READINESS.md), yayın adımları [docs/RELEASE_OPERATIONS.md](docs/RELEASE_OPERATIONS.md), mağaza metinleri [docs/APP_STORE_METADATA.md](docs/APP_STORE_METADATA.md) ve gizlilik politikası taslağı [docs/PRIVACY_POLICY.md](docs/PRIVACY_POLICY.md) içindedir.

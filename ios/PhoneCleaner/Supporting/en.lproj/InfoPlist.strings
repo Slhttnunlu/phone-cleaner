@@ -1,0 +1,3 @@
+CFBundleDisplayName = "Phone Cleaner";
+NSPhotoLibraryUsageDescription = "Phone Cleaner reviews your photos and videos only on this device to help you free storage space.";
+NSPhotoLibraryAddUsageDescription = "Phone Cleaner needs Photos access to delete only the items you select after iOS asks for confirmation.";

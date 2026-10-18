@@ -3,7 +3,7 @@
     "name": "Phone Cleaner",
     "slug": "phone-cleaner",
     "icon": "./assets/icon.png",
-    "description": "Fotoğraf kütüphanenizde yer açmanıza yardımcı olan cihaz içi iPhone uygulaması.",
+    "description": "Fotoğraf kütüphanenizde güvenle yer açmanıza yardımcı olan, reklamsız ve cihaz içi iPhone uygulaması.",
     "scheme": "phonecleaner",
     "version": "0.1.0",
     "platforms": ["ios"],
@@ -12,18 +12,23 @@
     "ios": {
       "bundleIdentifier": "com.slhttnunlu.phonecleaner",
       "buildNumber": "1",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Galerinizde yer açmanıza yardımcı olmak için fotoğraf ve videolarınızı yalnızca cihazınızda tarar.",
-        "NSPhotoLibraryAddUsageDescription": "Seçtiğiniz fotoğraf ve videoları silmek için Fotoğraflar erişimi gerekir."
+        "CFBundleAllowMixedLocalizations": true,
+        "NSPhotoLibraryUsageDescription": "Phone Cleaner, depolama alanı açmanıza yardımcı olmak için fotoğraf ve videolarınızı yalnızca bu cihazda inceler.",
+        "NSPhotoLibraryAddUsageDescription": "Phone Cleaner, yalnızca seçtiğiniz öğeleri iOS onayından sonra silmek için Fotoğraflar erişimine ihtiyaç duyar."
       }
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "tr": "./locales/tr.json"
     },
     "plugins": [
       [
         "expo-media-library",
         {
-          "photosPermission": "Galerinizde yer açmanıza yardımcı olmak için fotoğraf ve videolarınızı yalnızca cihazınızda tarar.",
-          "savePhotosPermission": "Seçtiğiniz fotoğraf ve videoları silmek için Fotoğraflar erişimi gerekir."
+          "photosPermission": "Phone Cleaner, depolama alanı açmanıza yardımcı olmak için fotoğraf ve videolarınızı yalnızca bu cihazda inceler.",
+          "savePhotosPermission": "Phone Cleaner, yalnızca seçtiğiniz öğeleri iOS onayından sonra silmek için Fotoğraflar erişimine ihtiyaç duyar."
         }
       ],
       "expo-status-bar"

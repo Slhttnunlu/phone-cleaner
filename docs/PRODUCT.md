@@ -37,6 +37,8 @@ Bu olaylara medya içeriği, dosya adı, konum, varlık kimliği veya seçim det
 
 Ücretsiz temizlik sınırı ürün ölçümleri ve gerçek kullanıcı denemeleri tamamlanmadan sabitlenmez. 1 GB, 3 GB veya öğe sayısı gibi seçenekler ayrı bir ürün kararı olarak değerlendirilecektir. Kullanıcı tarama ve inceleme yapmadan ödeme ekranına zorlanmaz; ücretli sınır, silme işleminden önce açık ve yanıltıcı olmayan bir dille gösterilir.
 
+Kabul edilen pazar konumlandırması, reklamsızlık kararı, hedeflenen alan deneyimi, fiyat/limit hipotezleri ve doğrulama planı [ticari ürün stratejisinde](PRODUCT_STRATEGY.md) kayıtlıdır.
+
 ## Riskler ve ürün kararları
 
 | Risk | Karar |

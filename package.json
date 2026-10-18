@@ -5,17 +5,20 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
     "web": "expo start --web",
     "test": "jest --runInBand",
     "lint": "eslint .",
     "test:export:ios": "expo export --platform ios --output-dir /tmp/phone-cleaner-export"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "^57.0.0",
+    "expo-image-manipulator": "~57.0.21",
     "expo-media-library": "~57.0.5",
     "expo-status-bar": "~57.0.1",
+    "expo-video-thumbnails": "~57.0.2",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-safe-area-context": "~5.7.0"

@@ -1,0 +1,7 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Phone Cleaner",
+    "NSPhotoLibraryUsageDescription": "Phone Cleaner, depolama alanı açmanıza yardımcı olmak için fotoğraf ve videolarınızı yalnızca bu cihazda inceler.",
+    "NSPhotoLibraryAddUsageDescription": "Phone Cleaner, yalnızca seçtiğiniz öğeleri iOS onayından sonra silmek için Fotoğraflar erişimine ihtiyaç duyar."
+  }
+}

@@ -16,16 +16,16 @@
 4. Gizlilik politikası için herkese açık HTTPS URL hazırlanır.
 5. App Privacy yanıtları; uygulamanın medya içeriğini toplamadığını, Photos izninin yalnızca cihaz içi işlev için kullanıldığını doğru biçimde belirtir.
 
-## Preview / TestFlight build
+## Internal preview build
 
 ```bash
 npx eas-cli@latest login
 npx eas-cli@latest build --platform ios --profile preview
 ```
 
-Build tamamlandığında TestFlight'a yüklenir veya App Store Connect'e gönderilir. İlk harici TestFlight grubu, Beta App Review gerektirebilir.
+`preview` profili `distribution: internal` kullanır. Bu build kayıtlı cihazlarda hızlı doğrulama içindir; App Store Connect veya TestFlight'a gönderilmez.
 
-## Production build ve submit
+## TestFlight / production build ve submit
 
 ```bash
 npm run lint
@@ -35,7 +35,25 @@ npx eas-cli@latest build --platform ios --profile production
 npx eas-cli@latest submit --platform ios --profile production
 ```
 
+TestFlight için mağaza dağıtımına uygun `production` profili kullanılır. Build App Store Connect'e gönderildikten ve Apple tarafından işlendikten sonra önce internal tester grubuna atanır. İlk harici TestFlight grubu Beta App Review gerektirebilir.
+
 Komutları çalıştırmadan önce [gerçek cihaz kabul formu](REAL_DEVICE_TEST.md) tamamlanmış olmalıdır. `eas.json` içindeki `autoIncrement`, production build numarasını EAS'te artırır; App Store Connect'e elle daha düşük bir build numarası gönderilmez.
+
+## Hesap sahibiyle tamamlanacak alanlar
+
+- Apple Developer üyeliği ve kimlik doğrulaması
+- App Store Connect uygulama kaydı ve bundle ID doğrulaması
+- Paid Apps sözleşmesi yalnızca Pro/IAP bu build'e alınacaksa
+- Banka ve vergi bilgileri yalnızca ücretli ürün açılacaksa
+- `[SUPPORT_EMAIL]`, `[PUBLIC_SUPPORT_URL]` ve `[PUBLIC_PRIVACY_URL]` placeholder'ları
+- App Privacy anketinin gönderilecek binary ile son kez karşılaştırılması
+- Yaş derecelendirmesi ve ülke/bölge seçimi
+- Gerçek cihaz ekran görüntüleri
+- Production build, upload ve internal TestFlight tester ataması
+
+## İlk TestFlight kapsamı
+
+İlk TestFlight build'i ödeme içermez. Amaç; izin, cihaz içi tarama, önizleme, seçim, iOS sistem onaylı silme, Son Silinenler açıklaması ve Türkçe/İngilizce metinleri doğrulamaktır. Phone Cleaner Pro ve ücretsiz limit, bu temel akış güvenilir hale geldikten sonra ayrı build'de eklenir.
 
 ## Geri alma
 

@@ -9,8 +9,8 @@ export function estimateAssetBytes(asset) {
   return Math.round(Math.max(pixels * 0.35, 512 * 1024));
 }
 
-export function formatBytes(bytes) {
-  if (!bytes) return 'Boyut bilgisi yok';
+export function formatBytes(bytes, emptyLabel = 'Boyut bilgisi yok') {
+  if (!bytes) return emptyLabel;
   const units = ['B', 'KB', 'MB', 'GB'];
   const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
   return `${(bytes / 1024 ** index).toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
