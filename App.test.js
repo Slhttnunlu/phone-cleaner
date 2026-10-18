@@ -87,6 +87,19 @@ describe('Photos permission flow', () => {
     expect(screen.getByText('Allow Photos access')).toBeOnTheScreen();
   });
 
+  it('stores the dark appearance preference from Settings', () => {
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: true, canAskAgain: true, accessPrivileges: 'all' },
+      jest.fn(),
+    ]);
+
+    render(<App />);
+    fireEvent.press(screen.getByRole('tab', { name: 'Ayarları aç' }));
+    fireEvent(screen.getByRole('switch', { name: 'Koyu görünüm' }), 'valueChange', true);
+
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('phone-cleaner.dark-mode', 'true');
+  });
+
   it('allows an in-progress scan to be cancelled', async () => {
     MediaLibrary.usePermissions.mockReturnValue([
       { granted: true, canAskAgain: true, accessPrivileges: 'all' },
