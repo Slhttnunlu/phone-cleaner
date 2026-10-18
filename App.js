@@ -324,15 +324,15 @@ function AppContent() {
         <View style={styles.tabPage}>
           <View style={styles.permissionContainer}>
           <AppMark copy={copy} />
-          <Text style={styles.eyebrow}>{copy.appName}</Text>
+          <Text style={[styles.eyebrow, darkMode && styles.darkAccentText]}>{copy.appName}</Text>
           <Text style={[styles.title, darkMode && styles.darkPrimaryText]}>{copy.permissionTitle}</Text>
           <Text style={[styles.body, darkMode && styles.darkSecondaryText]}>
             {permission.canAskAgain
               ? copy.permissionBody
               : copy.permissionDenied}
           </Text>
-          <Pressable style={styles.primaryButton} onPress={permissionAction.onPress} accessibilityRole="button">
-            <Text style={styles.primaryButtonText}>{permissionAction.label}</Text>
+          <Pressable style={[styles.primaryButton, darkMode && styles.darkPrimaryButton]} onPress={permissionAction.onPress} accessibilityRole="button">
+            <Text style={[styles.primaryButtonText, darkMode && styles.darkButtonText]}>{permissionAction.label}</Text>
           </Pressable>
           </View>
           <BottomTabs activeTab={activeTab} copy={copy} onChange={setActiveTab} darkMode={darkMode} />
@@ -366,10 +366,10 @@ function AppContent() {
         <View style={styles.screen}>
           <View style={styles.headerRow}>
             <Pressable onPress={() => setActiveCategory(null)} accessibilityRole="button">
-              <Text style={styles.backButton}>{copy.summary}</Text>
+              <Text style={[styles.backButton, darkMode && styles.darkAccentText]}>{copy.summary}</Text>
             </Pressable>
             <Pressable onPress={selectAll} accessibilityRole="button">
-              <Text style={styles.textButton}>
+              <Text style={[styles.textButton, darkMode && styles.darkAccentText]}>
                 {selectedIds.size === visibleAssets.length && visibleAssets.length
                   ? copy.deselectAll
                   : copy.selectAll}
@@ -459,15 +459,15 @@ function AppContent() {
         <View style={styles.topBar}>
           <View style={styles.brandLockup}>
             <AppMark compact copy={copy} />
-            <Text style={styles.eyebrow}>{copy.appName}</Text>
+            <Text style={[styles.eyebrow, darkMode && styles.darkAccentText]}>{copy.appName}</Text>
           </View>
           <Text style={[styles.localBadge, darkMode && styles.darkLocalBadge]}>{copy.localBadge}</Text>
         </View>
         <View style={[styles.heroCard, hasScanned ? styles.heroResultCard : styles.heroIntroCard, darkMode && styles.darkSurface]}>
           {hasScanned ? (
             <View style={styles.resultHeroContent}>
-              <Text style={styles.heroKicker}>{copy.resultKicker}</Text>
-              <Text style={styles.resultEstimate}>
+              <Text style={[styles.heroKicker, darkMode && styles.darkAccentText]}>{copy.resultKicker}</Text>
+              <Text style={[styles.resultEstimate, darkMode && styles.darkAccentText]}>
                 ~{formatBytes(scanSummary.bytes, copy.noSize)}
               </Text>
               <Text style={[styles.resultEstimateLabel, darkMode && styles.darkPrimaryText]}>{copy.estimatedReclaimable}</Text>
@@ -478,13 +478,13 @@ function AppContent() {
             </View>
           ) : (
             <View>
-              <Text style={styles.heroKicker}>{copy.smartScan}</Text>
+              <Text style={[styles.heroKicker, darkMode && styles.darkAccentText]}>{copy.smartScan}</Text>
               <Text style={[styles.heroTitle, darkMode && styles.darkPrimaryText]}>{copy.heroTitle}</Text>
               <Text style={[styles.heroBody, darkMode && styles.darkSecondaryText]}>
                 {scanMessageKey === 'ready' ? copy.scanCallout : copy[scanMessageKey]}
               </Text>
               <Pressable
-                style={styles.scanButton}
+                style={[styles.scanButton, darkMode && styles.darkScanButton]}
                 onPress={scanLibrary}
                 accessibilityRole="button"
                 accessibilityLabel={copy.scan}
@@ -498,15 +498,15 @@ function AppContent() {
           )}
         </View>
         {permission.accessPrivileges === 'limited' ? (
-          <View style={styles.limitedBanner}>
-            <Text style={styles.limitedBannerText}>
+          <View style={[styles.limitedBanner, darkMode && styles.darkInfoBanner]}>
+            <Text style={[styles.limitedBannerText, darkMode && styles.darkSecondaryText]}>
               {copy.limitedAccess}
             </Text>
             <Pressable
               onPress={() => MediaLibrary.presentPermissionsPickerAsync()}
               accessibilityRole="button"
             >
-              <Text style={styles.limitedBannerAction}>{copy.editSelection}</Text>
+              <Text style={[styles.limitedBannerAction, darkMode && styles.darkAccentText]}>{copy.editSelection}</Text>
             </Pressable>
           </View>
         ) : null}
@@ -514,7 +514,7 @@ function AppContent() {
           <Text style={[styles.sectionLabel, darkMode && styles.darkPrimaryText]}>{copy.review}</Text>
           {hasScanned ? (
             <Pressable onPress={scanLibrary} accessibilityRole="button">
-              <Text style={styles.rescanButton}>{copy.rescan}</Text>
+              <Text style={[styles.rescanButton, darkMode && styles.darkAccentText]}>{copy.rescan}</Text>
             </Pressable>
           ) : (
             <Text style={[styles.sectionMeta, darkMode && styles.darkSecondaryText]}>{copy.categories}</Text>
@@ -527,7 +527,7 @@ function AppContent() {
               return (
                 <Pressable key={key} style={[styles.card, darkMode && styles.darkSurface]} onPress={() => openCategory(key)} accessibilityRole="button">
                   <View style={[styles.categoryIcon, darkMode && styles.darkIconSurface]}>
-                    <Text style={styles.categoryIconText}>{config.icon}</Text>
+                    <Text style={[styles.categoryIconText, darkMode && styles.darkAccentText]}>{config.icon}</Text>
                   </View>
                   <View style={styles.cardContent}>
                     <Text style={[styles.cardTitle, darkMode && styles.darkPrimaryText]}>{config.title}</Text>
@@ -536,7 +536,7 @@ function AppContent() {
                   {hasScanned ? (
                     <View style={styles.cardStats}>
                       <Text style={[styles.cardCount, darkMode && styles.darkPrimaryText]}>{assets.length}</Text>
-                      <Text style={styles.cardSize}>{formatBytes(bytes, copy.noSize)}</Text>
+                      <Text style={[styles.cardSize, darkMode && styles.darkAccentText]}>{formatBytes(bytes, copy.noSize)}</Text>
                     </View>
                   ) : null}
                   <Text style={styles.cardChevron}>›</Text>
@@ -545,14 +545,14 @@ function AppContent() {
           })}
           <View style={[styles.card, styles.cardComingSoon, darkMode && styles.darkSurface]} accessibilityLabel={`${copy.similarPhotosTitle}. ${copy.inDevelopment}`}>
             <View style={[styles.categoryIcon, styles.categoryIconComingSoon, darkMode && styles.darkIconSurface]}>
-              <Text style={styles.categoryIconText}>◫</Text>
+              <Text style={[styles.categoryIconText, darkMode && styles.darkAccentText]}>◫</Text>
             </View>
             <View style={styles.cardContent}>
               <Text style={[styles.cardTitle, darkMode && styles.darkPrimaryText]}>{copy.similarPhotosTitle}</Text>
               <Text style={[styles.cardDescription, darkMode && styles.darkSecondaryText]}>{copy.similarPhotosDescription}</Text>
             </View>
-            <View style={styles.developmentBadge}>
-              <Text style={styles.developmentBadgeText}>{copy.inDevelopment}</Text>
+            <View style={[styles.developmentBadge, darkMode && styles.darkInfoBanner]}>
+              <Text style={[styles.developmentBadgeText, darkMode && styles.darkSecondaryText]}>{copy.inDevelopment}</Text>
             </View>
           </View>
         </View>
@@ -599,8 +599,8 @@ function BottomTabs({ activeTab, copy, darkMode, onChange }) {
             accessibilityState={{ selected }}
             accessibilityLabel={tab.accessibilityLabel}
           >
-            <Text style={[styles.bottomTabIcon, darkMode && styles.darkMutedText, selected && styles.bottomTabTextActive]}>{tab.icon}</Text>
-            <Text style={[styles.bottomTabText, darkMode && styles.darkMutedText, selected && styles.bottomTabTextActive]}>{tab.label}</Text>
+            <Text style={[styles.bottomTabIcon, darkMode && styles.darkMutedText, selected && styles.bottomTabTextActive, selected && darkMode && styles.darkAccentText]}>{tab.icon}</Text>
+            <Text style={[styles.bottomTabText, darkMode && styles.darkMutedText, selected && styles.bottomTabTextActive, selected && darkMode && styles.darkAccentText]}>{tab.label}</Text>
           </Pressable>
         );
       })}
@@ -645,13 +645,13 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
         accessibilityLabel={copy.chooseLanguage}
       >
         <View style={styles.settingsRow}>
-          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={styles.settingsIconText}>文</Text></View>
+          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>文</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.languageTitle}</Text>
             <Text style={[styles.settingsCardBody, darkMode && styles.darkSecondaryText]}>{copy.languageDescription}</Text>
           </View>
           <View style={styles.settingsTrailing}>
-            <Text style={styles.languagePickerValue}>
+            <Text style={[styles.languagePickerValue, darkMode && styles.darkAccentText]}>
               {SUPPORTED_LANGUAGES.find((option) => option.key === language)?.nativeLabel}
             </Text>
             <Text style={styles.languagePickerChevron}>›</Text>
@@ -661,7 +661,7 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
 
       <View style={[styles.settingsCard, darkMode && styles.darkSurface]}>
         <View style={styles.settingsRow}>
-          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={styles.settingsIconText}>◐</Text></View>
+          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>◐</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.darkModeTitle}</Text>
             <Text style={[styles.settingsCardBody, darkMode && styles.darkSecondaryText]}>{copy.darkModeDescription}</Text>
@@ -669,8 +669,8 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
           <Switch
             value={darkMode}
             onValueChange={onChangeDarkMode}
-            trackColor={{ false: '#C7D1C8', true: '#347C4B' }}
-            thumbColor={darkMode ? '#D9F45D' : '#FFFFFF'}
+            trackColor={{ false: '#C7D1C8', true: '#4778C7' }}
+            thumbColor="#FFFFFF"
             accessibilityLabel={copy.darkModeTitle}
           />
         </View>
@@ -678,20 +678,20 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
 
       <View style={[styles.settingsCard, darkMode && styles.darkSurface]}>
         <View style={styles.settingsRow}>
-          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={styles.settingsIconText}>◎</Text></View>
+          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>◎</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.photosAccessTitle}</Text>
-            <Text style={styles.settingsStatus}>{accessLabel}</Text>
+            <Text style={[styles.settingsStatus, darkMode && styles.darkAccentText]}>{accessLabel}</Text>
           </View>
           <Pressable onPress={manageAccess} accessibilityRole="button" style={[styles.settingsAction, darkMode && styles.darkIconSurface]}>
-            <Text style={styles.settingsActionText}>{copy.manageAccess}</Text>
+            <Text style={[styles.settingsActionText, darkMode && styles.darkAccentText]}>{copy.manageAccess}</Text>
           </Pressable>
         </View>
       </View>
 
       <View style={[styles.settingsCard, darkMode && styles.darkSurface]}>
         <View style={styles.settingsRow}>
-          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={styles.settingsIconText}>✓</Text></View>
+          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>✓</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.privacyTitle}</Text>
             <Text style={[styles.settingsCardBody, darkMode && styles.darkSecondaryText]}>{copy.privacyBody}</Text>
@@ -701,12 +701,12 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
 
       <View style={[styles.settingsCard, darkMode && styles.darkSurface]}>
         <View style={styles.settingsRow}>
-          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={styles.settingsIconText}>i</Text></View>
+          <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>i</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.versionTitle}</Text>
             <Text style={[styles.settingsCardBody, darkMode && styles.darkSecondaryText]}>{copy.releaseChannel}</Text>
           </View>
-          <Text style={styles.settingsVersionValue}>{copy.versionValue}</Text>
+          <Text style={[styles.settingsVersionValue, darkMode && styles.darkAccentText]}>{copy.versionValue}</Text>
         </View>
       </View>
 
@@ -847,13 +847,13 @@ function ScanningScreen({ copy, onCancel, darkMode }) {
     <SafeAreaView style={[styles.safeArea, darkMode && styles.darkSafeArea]}>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <View style={styles.scanningContainer}>
-        <Text style={styles.eyebrow}>{copy.appName}</Text>
+        <Text style={[styles.eyebrow, darkMode && styles.darkAccentText]}>{copy.appName}</Text>
         <View style={styles.scanningAnimation} accessibilityLabel={copy.scanScreenTitle}>
           <Animated.View
-            style={[styles.scanningPulse, { opacity: outerOpacity, transform: [{ scale: outerScale }] }]}
+            style={[styles.scanningPulse, darkMode && styles.darkScanningPulse, { opacity: outerOpacity, transform: [{ scale: outerScale }] }]}
           />
           <View style={[styles.scanningCore, darkMode && styles.darkSurface]}>
-            <ActivityIndicator size="large" color={darkMode ? '#D9F45D' : '#17301F'} />
+            <ActivityIndicator size="large" color={darkMode ? '#79A7FF' : '#17301F'} />
           </View>
         </View>
         <Text style={[styles.scanningTitle, darkMode && styles.darkPrimaryText]}>{copy.scanScreenTitle}</Text>
@@ -1033,19 +1033,19 @@ function CleanupSuccessScreen({ result, onComplete, copy, darkMode }) {
     <SafeAreaView style={[styles.safeArea, darkMode && styles.darkSafeArea]}>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <View style={styles.successContainer}>
-        <View style={styles.successIcon}>
-          <Text style={styles.successIconText}>✓</Text>
+        <View style={[styles.successIcon, darkMode && styles.darkPrimaryButton]}>
+          <Text style={[styles.successIconText, darkMode && styles.darkButtonText]}>✓</Text>
         </View>
-        <Text style={styles.eyebrow}>{copy.cleanupDone}</Text>
+        <Text style={[styles.eyebrow, darkMode && styles.darkAccentText]}>{copy.cleanupDone}</Text>
         <Text style={[styles.successTitle, darkMode && styles.darkPrimaryText]}>{copy.movedForDeletion(result.count)}</Text>
-        <Text style={styles.successEstimate}>{copy.estimatedSpace(formatBytes(result.bytes, copy.noSize))}</Text>
+        <Text style={[styles.successEstimate, darkMode && styles.darkAccentText]}>{copy.estimatedSpace(formatBytes(result.bytes, copy.noSize))}</Text>
         <View style={[styles.recentlyDeletedCard, darkMode && styles.darkSurface]}>
           <Text style={[styles.recentlyDeletedTitle, darkMode && styles.darkPrimaryText]}>{copy.spaceDelayTitle}</Text>
           <Text style={[styles.recentlyDeletedText, darkMode && styles.darkSecondaryText]}>{copy.recentlyDeletedBody}</Text>
           <Text style={[styles.recentlyDeletedText, darkMode && styles.darkSecondaryText]}>{copy.permanentlyDeleteBody}</Text>
         </View>
-        <Pressable style={styles.primaryButton} onPress={onComplete} accessibilityRole="button">
-          <Text style={styles.primaryButtonText}>{copy.done}</Text>
+        <Pressable style={[styles.primaryButton, darkMode && styles.darkPrimaryButton]} onPress={onComplete} accessibilityRole="button">
+          <Text style={[styles.primaryButtonText, darkMode && styles.darkButtonText]}>{copy.done}</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -1212,16 +1212,22 @@ const styles = StyleSheet.create({
   pickerCheck: { alignItems: 'center', borderColor: '#C7D1C8', borderRadius: 11, borderWidth: 2, height: 22, justifyContent: 'center', width: 22 },
   pickerCheckSelected: { backgroundColor: '#347C4B', borderColor: '#347C4B' },
   pickerCheckText: { color: '#FFFFFF', fontSize: 12, fontWeight: '900' },
-  darkSafeArea: { backgroundColor: '#101512' },
-  darkSurface: { backgroundColor: '#19211C', borderColor: '#2C3930', shadowColor: '#000000' },
-  darkSurfacePressed: { backgroundColor: '#202A23' },
-  darkPrimaryText: { color: '#F4F7F4' },
-  darkSecondaryText: { color: '#A5B0A8' },
-  darkMutedText: { color: '#768078' },
-  darkLocalBadge: { backgroundColor: '#202A23', color: '#A5B0A8' },
-  darkDivider: { borderTopColor: '#2C3930' },
-  darkIconSurface: { backgroundColor: '#25382B' },
-  darkBottomTabs: { backgroundColor: '#151B17', borderColor: '#2C3930' },
-  darkPickerSheet: { backgroundColor: '#101512' },
-  darkBorder: { borderColor: '#46544A' },
+  darkSafeArea: { backgroundColor: '#0D1117' },
+  darkSurface: { backgroundColor: '#161B22', borderColor: '#30363D', shadowColor: '#000000' },
+  darkSurfacePressed: { backgroundColor: '#20262E' },
+  darkPrimaryText: { color: '#F0F3F6' },
+  darkSecondaryText: { color: '#9DA7B3' },
+  darkMutedText: { color: '#707A86' },
+  darkAccentText: { color: '#79A7FF' },
+  darkLocalBadge: { backgroundColor: '#21262D', color: '#B4BDC7' },
+  darkDivider: { borderTopColor: '#30363D' },
+  darkIconSurface: { backgroundColor: '#202B3A' },
+  darkBottomTabs: { backgroundColor: '#11161D', borderColor: '#30363D' },
+  darkPickerSheet: { backgroundColor: '#0D1117' },
+  darkBorder: { borderColor: '#3D4651' },
+  darkScanButton: { backgroundColor: '#4778C7' },
+  darkPrimaryButton: { backgroundColor: '#4778C7' },
+  darkButtonText: { color: '#FFFFFF' },
+  darkInfoBanner: { backgroundColor: '#1B2635' },
+  darkScanningPulse: { backgroundColor: '#4778C7' },
 });
