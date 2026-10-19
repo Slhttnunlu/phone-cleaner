@@ -4,9 +4,12 @@ Bu senaryolar, P0 uygulaması gerçek iPhone cihazda doğrulanmadan tamamlandı 
 
 ## Otomatik regresyon durumu — 19 Ekim 2026
 
-Toplam 23 Jest testi aşağıdaki uygulama davranışlarını doğrular:
+Toplam 28 Jest testi aşağıdaki uygulama davranışlarını doğrular:
 
 - İlk izin isteği, reddedilmiş izinde iOS Ayarlar yönlendirmesi ve sınırlı kütüphane seçicisi
+- iOS Ayarlar'dan uygulamaya dönüldüğünde Photos izin durumunun otomatik yenilenmesi
+- Ayarlar'da tam, sınırlı ve kapalı Photos erişim durumlarının semantik yeşil, amber ve kırmızı renklerle ayrılması
+- Sınırlı erişimde yalnızca iOS'un döndürdüğü izinli öğelerin taranması ve erişim uyarısının sonuç ekranında korunması
 - Başarılı, boş, hatalı ve kullanıcı tarafından iptal edilen tarama durumları
 - Screenshots, büyük fotoğraf ve uzun video sınıflandırma eşikleri ile tahmini alan hesabı
 - Yerel fotoğraf/video thumbnail üretimi, thumbnail önbelleği ve iCloud varlığını indirmeden tanıma
@@ -14,13 +17,14 @@ Toplam 23 Jest testi aşağıdaki uygulama davranışlarını doğrular:
 - Tekil seçim, tümünü seçme, seçimi kaldırma ve seçili alanın hesaplanması
 - Uygulama silme onayı, tamamlanmayan native silmede seçimi koruma, hata ve başarı sonucu
 - Kalıcı dil ve koyu görünüm tercihleri
+- Tarama öncesi kategori açıklamalarının, başarılı tarama sonrasında adet ve boyut odaklı sonuçlara dönüşmesi
 
 Otomatik kontroller `npm test`, `npm run lint` ve `npm run test:export:ios` komutlarıyla çalıştırılır. Native Photos izin/silme pencereleri taklit edilmez; aşağıdaki gerçek cihaz senaryoları ayrıca tamamlanır.
 
 ## Kalan gerçek cihaz kapısı
 
-- iOS sistem silme penceresinde **Vazgeç** seçildiğinde başarı gösterilmediğini doğrula.
-- Sınırlı Photos erişiminde seçimi değiştirip yeniden taramayı doğrula.
+- [x] iOS sistem silme penceresinde **Vazgeç** seçildiğinde başarı gösterilmediği ve seçimin korunduğu gerçek iPhone'da doğrulandı.
+- [x] Sınırlı Photos erişiminde seçimi değiştirip yeniden tarama gerçek iPhone'da doğrulandı.
 - iCloud optimize edilmiş medya için ilk ve sonraki önizleme sürelerini doğrula.
 - Boş kütüphane ve büyük kütüphane taramasını gerçek cihazda doğrula.
 - VoiceOver, büyük dinamik metin ve kontrast kontrolünü tamamla.

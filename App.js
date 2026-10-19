@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
   Animated,
+  AppState,
   Easing,
   FlatList,
   Image,
@@ -52,7 +53,7 @@ export default function App() {
 
 function AppContent() {
   const [showLaunch, setShowLaunch] = useState(process.env.NODE_ENV !== 'test');
-  const [permission, requestPermission] = MediaLibrary.usePermissions();
+  const [permission, requestPermission, refreshPermission] = MediaLibrary.usePermissions();
   const [language, setLanguage] = useState(detectLanguage);
   const [darkMode, setDarkMode] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
@@ -77,6 +78,13 @@ function AppContent() {
     const timer = setTimeout(() => setShowLaunch(false), LAUNCH_DURATION_MS);
     return () => clearTimeout(timer);
   }, [showLaunch]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') refreshPermission?.();
+    });
+    return () => subscription.remove();
+  }, [refreshPermission]);
 
   useEffect(() => {
     let mounted = true;
@@ -475,13 +483,20 @@ function AppContent() {
           {hasScanned ? (
             <View style={styles.resultHeroContent}>
               <Text style={[styles.heroKicker, darkMode && styles.darkAccentText]}>{copy.resultKicker}</Text>
-              <Text style={[styles.resultEstimate, darkMode && styles.darkAccentText]}>
-                ~{formatBytes(scanSummary.bytes, copy.noSize)}
-              </Text>
+              <View style={[styles.resultEstimateBadge, darkMode && styles.darkMetricBadge]}>
+                <Text style={[styles.resultEstimate, darkMode && styles.darkMetricText]}>
+                  ~{formatBytes(scanSummary.bytes, copy.noSize)}
+                </Text>
+              </View>
               <Text style={[styles.resultEstimateLabel, darkMode && styles.darkPrimaryText]}>{copy.estimatedReclaimable}</Text>
               <View style={[styles.resultMetaRow, darkMode && styles.darkDivider]}>
-                <Text style={[styles.resultItemCount, darkMode && styles.darkPrimaryText]}>{copy.foundItems(scanSummary.count)}</Text>
-                <Text style={[styles.resultStatus, darkMode && styles.darkSecondaryText]}>{copy[scanMessageKey]}</Text>
+                <Text style={[styles.resultItemCount, darkMode && styles.darkPrimaryText]}>
+                  <Text style={[styles.resultItemCountNumber, darkMode && styles.darkMetricText]}>{scanSummary.count}</Text>
+                  {` ${copy.foundItemsLabel}`}
+                </Text>
+                {scanMessageKey !== 'scanComplete' ? (
+                  <Text style={[styles.resultStatus, darkMode && styles.darkSecondaryText]}>{copy[scanMessageKey]}</Text>
+                ) : null}
               </View>
             </View>
           ) : (
@@ -506,15 +521,15 @@ function AppContent() {
           )}
         </View>
         {permission.accessPrivileges === 'limited' ? (
-          <View style={[styles.limitedBanner, darkMode && styles.darkInfoBanner]}>
-            <Text style={[styles.limitedBannerText, darkMode && styles.darkSecondaryText]}>
+          <View style={[styles.limitedBanner, darkMode && styles.darkAmberSurface]}>
+            <Text style={[styles.limitedBannerText, darkMode && styles.darkAmberText]}>
               {copy.limitedAccess}
             </Text>
             <Pressable
               onPress={() => MediaLibrary.presentPermissionsPickerAsync()}
               accessibilityRole="button"
             >
-              <Text style={[styles.limitedBannerAction, darkMode && styles.darkAccentText]}>{copy.editSelection}</Text>
+              <Text style={[styles.limitedBannerAction, darkMode && styles.darkAmberText]}>{copy.editSelection}</Text>
             </Pressable>
           </View>
         ) : null}
@@ -539,12 +554,14 @@ function AppContent() {
                   </View>
                   <View style={styles.cardContent}>
                     <Text style={[styles.cardTitle, darkMode && styles.darkPrimaryText]}>{config.title}</Text>
-                    <Text style={[styles.cardDescription, darkMode && styles.darkSecondaryText]}>{config.description}</Text>
+                    {!hasScanned ? (
+                      <Text style={[styles.cardDescription, darkMode && styles.darkSecondaryText]}>{config.description}</Text>
+                    ) : null}
                   </View>
                   {hasScanned ? (
                     <View style={styles.cardStats}>
-                      <Text style={[styles.cardCount, darkMode && styles.darkPrimaryText]}>{assets.length}</Text>
-                      <Text style={[styles.cardSize, darkMode && styles.darkAccentText]}>{formatBytes(bytes, copy.noSize)}</Text>
+                      <Text style={[styles.cardCount, darkMode && styles.darkMetricText]}>{copy.categoryItemCount(assets.length)}</Text>
+                      <Text style={[styles.cardSize, darkMode && styles.darkMetricBadge]}>{formatBytes(bytes, copy.noSize)}</Text>
                     </View>
                   ) : null}
                   <Text style={styles.cardChevron}>›</Text>
@@ -552,15 +569,17 @@ function AppContent() {
             );
           })}
           <View style={[styles.card, styles.cardComingSoon, darkMode && styles.darkSurface]} accessibilityLabel={`${copy.similarPhotosTitle}. ${copy.inDevelopment}`}>
-            <View style={[styles.categoryIcon, styles.categoryIconComingSoon, darkMode && styles.darkIconSurface]}>
-              <Text style={[styles.categoryIconText, darkMode && styles.darkAccentText]}>◫</Text>
+            <View style={[styles.categoryIcon, styles.categoryIconComingSoon, darkMode && styles.darkAmberSurface]}>
+              <Text style={[styles.categoryIconText, styles.categoryIconTextComingSoon, darkMode && styles.darkAmberText]}>◫</Text>
             </View>
             <View style={styles.cardContent}>
               <Text style={[styles.cardTitle, darkMode && styles.darkPrimaryText]}>{copy.similarPhotosTitle}</Text>
-              <Text style={[styles.cardDescription, darkMode && styles.darkSecondaryText]}>{copy.similarPhotosDescription}</Text>
+              {!hasScanned ? (
+                <Text style={[styles.cardDescription, darkMode && styles.darkSecondaryText]}>{copy.similarPhotosDescription}</Text>
+              ) : null}
             </View>
-            <View style={[styles.developmentBadge, darkMode && styles.darkInfoBanner]}>
-              <Text style={[styles.developmentBadgeText, darkMode && styles.darkSecondaryText]}>{copy.inDevelopment}</Text>
+            <View style={[styles.developmentBadge, darkMode && styles.darkAmberSurface]}>
+              <Text style={[styles.developmentBadgeText, darkMode && styles.darkAmberText]}>{copy.inDevelopment}</Text>
             </View>
           </View>
         </View>
@@ -623,6 +642,11 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
       ? copy.photosAccessLimited
       : copy.photosAccessFull
     : copy.photosAccessDenied;
+  const accessStatusStyle = permission.granted
+    ? permission.accessPrivileges === 'limited'
+      ? darkMode ? styles.darkStatusLimited : styles.settingsStatusLimited
+      : darkMode ? styles.darkStatusFull : styles.settingsStatusFull
+    : darkMode ? styles.darkStatusDenied : styles.settingsStatusDenied;
 
   const manageAccess = () => {
     if (permission.accessPrivileges === 'limited') {
@@ -677,7 +701,7 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
           <Switch
             value={darkMode}
             onValueChange={onChangeDarkMode}
-            trackColor={{ false: '#C7D1C8', true: '#4778C7' }}
+            trackColor={{ false: '#C7D1C8', true: '#3F8254' }}
             thumbColor="#FFFFFF"
             accessibilityLabel={copy.darkModeTitle}
           />
@@ -689,7 +713,7 @@ function SettingsScreen({ copy, language, onChangeLanguage, permission, darkMode
           <View style={[styles.settingsIcon, darkMode && styles.darkIconSurface]}><Text style={[styles.settingsIconText, darkMode && styles.darkAccentText]}>◎</Text></View>
           <View style={styles.settingsRowCopy}>
             <Text style={[styles.settingsCardTitle, darkMode && styles.darkPrimaryText]}>{copy.photosAccessTitle}</Text>
-            <Text style={[styles.settingsStatus, darkMode && styles.darkAccentText]}>{accessLabel}</Text>
+            <Text style={[styles.settingsStatus, accessStatusStyle]}>{accessLabel}</Text>
           </View>
           <Pressable onPress={manageAccess} accessibilityRole="button" style={[styles.settingsAction, darkMode && styles.darkIconSurface]}>
             <Text style={[styles.settingsActionText, darkMode && styles.darkAccentText]}>{copy.manageAccess}</Text>
@@ -861,7 +885,7 @@ function ScanningScreen({ copy, onCancel, darkMode }) {
             style={[styles.scanningPulse, darkMode && styles.darkScanningPulse, { opacity: outerOpacity, transform: [{ scale: outerScale }] }]}
           />
           <View style={[styles.scanningCore, darkMode && styles.darkSurface]}>
-            <ActivityIndicator size="large" color={darkMode ? '#79A7FF' : '#17301F'} />
+            <ActivityIndicator size="large" color={darkMode ? '#8FD6A5' : '#17301F'} />
           </View>
         </View>
         <Text style={[styles.scanningTitle, darkMode && styles.darkPrimaryText]}>{copy.scanScreenTitle}</Text>
@@ -1047,11 +1071,6 @@ function CleanupSuccessScreen({ result, onComplete, copy, darkMode }) {
         <Text style={[styles.eyebrow, darkMode && styles.darkAccentText]}>{copy.cleanupDone}</Text>
         <Text style={[styles.successTitle, darkMode && styles.darkPrimaryText]}>{copy.movedForDeletion(result.count)}</Text>
         <Text style={[styles.successEstimate, darkMode && styles.darkAccentText]}>{copy.estimatedSpace(formatBytes(result.bytes, copy.noSize))}</Text>
-        <View style={[styles.recentlyDeletedCard, darkMode && styles.darkSurface]}>
-          <Text style={[styles.recentlyDeletedTitle, darkMode && styles.darkPrimaryText]}>{copy.spaceDelayTitle}</Text>
-          <Text style={[styles.recentlyDeletedText, darkMode && styles.darkSecondaryText]}>{copy.recentlyDeletedBody}</Text>
-          <Text style={[styles.recentlyDeletedText, darkMode && styles.darkSecondaryText]}>{copy.permanentlyDeleteBody}</Text>
-        </View>
         <Pressable style={[styles.primaryButton, darkMode && styles.darkPrimaryButton]} onPress={onComplete} accessibilityRole="button">
           <Text style={[styles.primaryButtonText, darkMode && styles.darkButtonText]}>{copy.done}</Text>
         </Pressable>
@@ -1094,9 +1113,6 @@ const styles = StyleSheet.create({
   successIconText: { color: '#17301F', fontSize: 36, fontWeight: '800' },
   successTitle: { color: '#17301F', fontSize: 30, fontWeight: '800', letterSpacing: -0.6, lineHeight: 36, marginTop: 10 },
   successEstimate: { color: '#347C4B', fontSize: 18, fontWeight: '800', marginTop: 12 },
-  recentlyDeletedCard: { backgroundColor: '#FFFFFF', borderRadius: 18, marginTop: 30, padding: 20 },
-  recentlyDeletedTitle: { color: '#17301F', fontSize: 16, fontWeight: '800', marginBottom: 10 },
-  recentlyDeletedText: { color: '#526158', fontSize: 14, lineHeight: 21, marginTop: 8 },
   topBar: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
   brandLockup: { alignItems: 'center', flexDirection: 'row', gap: 10 },
   localBadge: { backgroundColor: '#EDF1EC', borderRadius: 13, color: '#526158', fontSize: 11, fontWeight: '700', overflow: 'hidden', paddingHorizontal: 11, paddingVertical: 7 },
@@ -1106,28 +1122,32 @@ const styles = StyleSheet.create({
   heroKicker: { color: '#3F8254', fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
   heroTitle: { color: '#17251C', fontSize: 31, fontWeight: '800', letterSpacing: -1, lineHeight: 34, marginTop: 5 },
   heroBody: { color: '#69756D', fontSize: 12, lineHeight: 16, marginTop: 6, maxWidth: 310 },
-  scanButton: { alignItems: 'center', backgroundColor: '#203127', borderRadius: 17, flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, minHeight: 48, paddingHorizontal: 16 },
-  scanButtonIconBadge: { alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.16)', borderRadius: 16, height: 32, justifyContent: 'center', width: 32 },
-  scanButtonIcon: { color: '#FFFFFF', fontSize: 16, fontWeight: '800', lineHeight: 19 },
-  scanButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: -0.2 },
+  scanButton: { alignItems: 'center', backgroundColor: '#203127', borderRadius: 20, flexDirection: 'row', justifyContent: 'space-between', marginTop: 12, minHeight: 60, paddingHorizontal: 18 },
+  scanButtonIconBadge: { alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.16)', borderRadius: 19, height: 38, justifyContent: 'center', width: 38 },
+  scanButtonIcon: { color: '#FFFFFF', fontSize: 18, fontWeight: '800', lineHeight: 21 },
+  scanButtonText: { color: '#FFFFFF', fontSize: 17, fontWeight: '800', letterSpacing: -0.2 },
   resultHeroContent: { flex: 1 },
-  resultEstimate: { color: '#267A4A', fontSize: 38, fontWeight: '900', letterSpacing: -1.5, marginTop: 6 },
+  resultEstimateBadge: { alignSelf: 'flex-start', backgroundColor: '#E6F3B6', borderRadius: 13, marginTop: 7, paddingHorizontal: 10, paddingVertical: 2 },
+  resultEstimate: { color: '#557400', fontSize: 40, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -1.5 },
   resultEstimateLabel: { color: '#17251C', fontSize: 15, fontWeight: '800', marginTop: 2 },
   resultMetaRow: { borderTopColor: '#D4DED5', borderTopWidth: 1, marginTop: 10, paddingTop: 9 },
-  resultItemCount: { color: '#17251C', fontSize: 14, fontWeight: '800' },
+  resultItemCount: { color: '#17251C', fontSize: 16, fontWeight: '800', lineHeight: 23 },
+  resultItemCountNumber: { color: '#557400', fontSize: 23, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -0.4 },
   resultStatus: { color: '#69756D', fontSize: 12, lineHeight: 17, marginTop: 5 },
   sectionHeader: { alignItems: 'baseline', flexDirection: 'row', justifyContent: 'space-between', marginTop: 13 },
   sectionLabel: { color: '#17301F', fontSize: 18, fontWeight: '800', letterSpacing: -0.3 },
   sectionMeta: { color: '#718078', fontSize: 12, fontWeight: '700' },
   rescanButton: { color: '#347C4B', fontSize: 13, fontWeight: '800' },
   limitedBanner: {
-    backgroundColor: '#EAF4D5',
+    backgroundColor: '#FFF3D6',
+    borderColor: '#EBCF8B',
     borderRadius: 14,
+    borderWidth: 1,
     marginTop: 16,
     padding: 14,
   },
-  limitedBannerText: { color: '#36513B', fontSize: 13, lineHeight: 18 },
-  limitedBannerAction: { color: '#347C4B', fontSize: 13, fontWeight: '800', marginTop: 8 },
+  limitedBannerText: { color: '#6B4A00', fontSize: 13, lineHeight: 18 },
+  limitedBannerAction: { color: '#875D00', fontSize: 13, fontWeight: '800', marginTop: 8 },
   disabledButton: { opacity: 0.45 },
   cards: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 7 },
   card: { alignItems: 'flex-start', backgroundColor: '#FFFFFF', borderColor: '#E5EAE4', borderRadius: 18, borderWidth: 1, flexDirection: 'column', minHeight: 154, padding: 13, position: 'relative', width: '49%' },
@@ -1136,14 +1156,15 @@ const styles = StyleSheet.create({
   cardContent: { flex: 1, paddingRight: 2 },
   cardTitle: { color: '#17251C', flexShrink: 1, fontSize: 15, fontWeight: '800', lineHeight: 19 },
   cardDescription: { color: '#718078', flexShrink: 1, fontSize: 12, lineHeight: 16, marginTop: 3 },
-  cardStats: { alignItems: 'flex-start', flexDirection: 'row', gap: 5, marginTop: 7 },
-  cardCount: { color: '#17301F', fontSize: 16, fontWeight: '800' },
-  cardSize: { color: '#347C4B', fontSize: 12, fontWeight: '700', marginTop: 3 },
+  cardStats: { alignItems: 'flex-start', gap: 5, marginTop: 7 },
+  cardCount: { color: '#557400', fontSize: 18, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -0.2, lineHeight: 22 },
+  cardSize: { backgroundColor: '#EFF6D4', borderRadius: 8, color: '#496400', fontSize: 14, fontVariant: ['tabular-nums'], fontWeight: '800', lineHeight: 19, overflow: 'hidden', paddingHorizontal: 7, paddingVertical: 3 },
   cardChevron: { color: '#A9B8AC', fontSize: 22, fontWeight: '400', position: 'absolute', right: 12, top: 11 },
   cardComingSoon: { opacity: 0.78 },
-  categoryIconComingSoon: { backgroundColor: '#EDF0EC' },
-  developmentBadge: { alignSelf: 'flex-start', backgroundColor: '#EFF3ED', borderRadius: 9, marginTop: 5, paddingHorizontal: 6, paddingVertical: 4 },
-  developmentBadgeText: { color: '#52705B', fontSize: 9, fontWeight: '800' },
+  categoryIconComingSoon: { backgroundColor: '#FFF3D6' },
+  categoryIconTextComingSoon: { color: '#B1790F' },
+  developmentBadge: { alignSelf: 'flex-start', backgroundColor: '#FFF3D6', borderRadius: 9, marginTop: 5, paddingHorizontal: 7, paddingVertical: 4 },
+  developmentBadgeText: { color: '#805700', fontSize: 9, fontWeight: '800' },
   footnote: { color: '#718078', fontSize: 10, lineHeight: 13, marginTop: 'auto', paddingVertical: 3 },
   headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
   headerAction: { alignItems: 'center', backgroundColor: '#EEF2ED', borderRadius: 17, justifyContent: 'center', minHeight: 44, paddingHorizontal: 14 },
@@ -1209,7 +1230,10 @@ const styles = StyleSheet.create({
   settingsIcon: { alignItems: 'center', backgroundColor: '#EAF4D5', borderRadius: 15, height: 44, justifyContent: 'center', width: 44 },
   settingsIconText: { color: '#347C4B', fontSize: 20, fontWeight: '800' },
   settingsRowCopy: { flex: 1 },
-  settingsStatus: { color: '#347C4B', fontSize: 13, fontWeight: '700', marginTop: 4 },
+  settingsStatus: { fontSize: 13, fontWeight: '800', marginTop: 4 },
+  settingsStatusFull: { color: '#347C4B' },
+  settingsStatusLimited: { color: '#875D00' },
+  settingsStatusDenied: { color: '#B42318' },
   settingsAction: { backgroundColor: '#EFF3ED', borderRadius: 14, justifyContent: 'center', minHeight: 44, paddingHorizontal: 12 },
   settingsActionText: { color: '#347C4B', fontSize: 12, fontWeight: '800' },
   settingsVersionValue: { color: '#347C4B', fontSize: 14, fontWeight: '800' },
@@ -1223,22 +1247,29 @@ const styles = StyleSheet.create({
   pickerCheck: { alignItems: 'center', borderColor: '#C7D1C8', borderRadius: 11, borderWidth: 2, height: 22, justifyContent: 'center', width: 22 },
   pickerCheckSelected: { backgroundColor: '#347C4B', borderColor: '#347C4B' },
   pickerCheckText: { color: '#FFFFFF', fontSize: 12, fontWeight: '900' },
-  darkSafeArea: { backgroundColor: '#0D1117' },
-  darkSurface: { backgroundColor: '#161B22', borderColor: '#30363D', shadowColor: '#000000' },
-  darkSurfacePressed: { backgroundColor: '#20262E' },
-  darkPrimaryText: { color: '#F0F3F6' },
-  darkSecondaryText: { color: '#9DA7B3' },
-  darkMutedText: { color: '#707A86' },
-  darkAccentText: { color: '#79A7FF' },
-  darkLocalBadge: { backgroundColor: '#21262D', color: '#B4BDC7' },
-  darkDivider: { borderTopColor: '#30363D' },
-  darkIconSurface: { backgroundColor: '#202B3A' },
-  darkBottomTabs: { backgroundColor: '#11161D', borderColor: '#30363D' },
-  darkPickerSheet: { backgroundColor: '#0D1117' },
-  darkBorder: { borderColor: '#3D4651' },
-  darkScanButton: { backgroundColor: '#4778C7' },
-  darkPrimaryButton: { backgroundColor: '#4778C7' },
+  darkSafeArea: { backgroundColor: '#0C1410' },
+  darkSurface: { backgroundColor: '#141D17', borderColor: '#2A3A30', shadowColor: '#000000' },
+  darkSurfacePressed: { backgroundColor: '#1B2820' },
+  darkPrimaryText: { color: '#F1F5F0' },
+  darkSecondaryText: { color: '#A8B5AA' },
+  darkMutedText: { color: '#748078' },
+  darkAccentText: { color: '#8FD6A5' },
+  darkMetricText: { color: '#D9F45D' },
+  darkMetricBadge: { backgroundColor: '#35451F', color: '#D9F45D' },
+  darkAmberSurface: { backgroundColor: '#3B2C12', borderColor: '#6B5125' },
+  darkAmberText: { color: '#F2C96D' },
+  darkStatusFull: { color: '#7FD39A' },
+  darkStatusLimited: { color: '#F2C96D' },
+  darkStatusDenied: { color: '#FF8A80' },
+  darkLocalBadge: { backgroundColor: '#1B251F', color: '#B8C5BA' },
+  darkDivider: { borderTopColor: '#2A3A30' },
+  darkIconSurface: { backgroundColor: '#1B2B21' },
+  darkBottomTabs: { backgroundColor: '#101712', borderColor: '#2A3A30' },
+  darkPickerSheet: { backgroundColor: '#0C1410' },
+  darkBorder: { borderColor: '#34463A' },
+  darkScanButton: { backgroundColor: '#2F6B45' },
+  darkPrimaryButton: { backgroundColor: '#2F6B45' },
   darkButtonText: { color: '#FFFFFF' },
-  darkInfoBanner: { backgroundColor: '#1B2635' },
-  darkScanningPulse: { backgroundColor: '#4778C7' },
+  darkInfoBanner: { backgroundColor: '#17251C' },
+  darkScanningPulse: { backgroundColor: '#5D8D55' },
 });

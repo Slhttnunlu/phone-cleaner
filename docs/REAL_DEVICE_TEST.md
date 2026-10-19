@@ -19,13 +19,13 @@ Bu form, Expo Go hızlı denemesi ile TestFlight build kabulünün yerini tutmaz
 | Senaryo | Beklenen sonuç | Sonuç |
 | --- | --- | --- |
 | İlk açılış | Yerel işleme açıklaması ve Photos izni görünür. | |
-| İzin reddi | Tarama başlamaz; açıklayıcı tekrar deneme/Ayarlar yolu görünür. | |
-| Sınırlı erişim | Yalnızca seçili varlıklar gösterilir; sınır kullanıcıya açıklanır. | |
+| İzin reddi | Tarama başlamaz; açıklayıcı tekrar deneme/Ayarlar yolu görünür. | Geçti — 19 Ekim 2026, Ayarlar'dan izin değişikliği sonrası uygulamaya dönüş doğrulandı. |
+| Sınırlı erişim | Yalnızca seçili varlıklar gösterilir; sınır kullanıcıya açıklanır. | Geçti — 19 Ekim 2026, seçim değişikliği ve yeniden tarama gerçek iPhone'da doğrulandı. |
 | Tam erişim | Screenshots, yüksek çözünürlüklü fotoğraf ve uzun video kategorileri taranır. | |
 | Boş kütüphane | Hata/çökme olmadan boş kategori durumu görünür. | |
 | Normal kütüphane | Grid önizlemeleri açılır; tekil/toplu seçim güncellenir. | |
 | Sistem silme onayı | Seçimden sonra iOS onayı görünür; uygulama onayı atlamaz. | |
-| Sistem silme iptali | Başarılı işlem mesajı gösterilmez; seçim korunur. | |
+| Sistem silme iptali | Başarılı işlem mesajı gösterilmez; seçim korunur. | Geçti — 19 Ekim 2026, gerçek iPhone. |
 | Başarılı silme | Kategoriler güncellenir, yanlış başarı/alan değeri gösterilmez. | |
 | iCloud optimize medya | Hata olmadan sonuç görünür; alanın tahmini olduğu belirtilir. | |
 | Uzun tarama | Arayüz yanıt verir; kullanıcı uygulamadan çıkıp geri döndüğünde çökme olmaz. | |

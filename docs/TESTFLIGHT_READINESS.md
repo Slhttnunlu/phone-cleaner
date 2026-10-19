@@ -1,6 +1,6 @@
 # Phone Cleaner — TestFlight readiness
 
-Last automated review: 18 October 2026
+Last automated review: 19 October 2026
 
 ## Ready in the repository
 
@@ -16,6 +16,7 @@ Last automated review: 18 October 2026
 - Turkish and English application copy and localized iOS permission descriptions
 - Home/Settings bottom navigation with a device-persisted language preference
 - Scroll-safe Home and Settings layouts, privacy/access summaries, and post-scan total estimate
+- Scan results that prioritize category count and estimated size while preserving status copy for empty, error, and changed-library states
 - 3.4-second launch animation and cyclic previous/next navigation in full-screen photo preview
 - Extensible language picker and a standard version-information settings row
 - No account, backend, advertising, tracking, or payment code in the first TestFlight build
@@ -33,13 +34,14 @@ npx expo-doctor
 npm run test:export:ios
 ```
 
-Result recorded on 18 October 2026:
+Result recorded on 19 October 2026:
 
 - ESLint: passed
-- Jest: 2 suites, 9 tests passed
-- Expo Doctor: 17/18 checks passed; the remaining warning is the untracked, locally generated `ios/` folder described below
+- Jest: 3 suites, 28 tests passed
+- Expo Doctor: 17/18 checks passed; the remaining warning is the native-project configuration synchronization decision described below
 - iOS JavaScript export: passed
 - Native iOS Simulator build with AsyncStorage: passed
+- Signed native iPhone Release build: passed
 - Expo public config resolution: passed
 
 These checks validate JavaScript behavior and Expo configuration. They do not replace a signed native build or physical-device acceptance test.
@@ -51,7 +53,7 @@ These checks validate JavaScript behavior and Expo configuration. They do not re
 ## Owner/device blockers before upload
 
 1. Enroll the final individual Apple Developer account.
-2. Choose the final Expo workflow before EAS Build: remove/archive the generated `ios/` folder for managed CNG, or deliberately commit and maintain native configuration. The current untracked folder prevents Expo Doctor from confirming that `app.json` fields will sync.
+2. Confirm the native-project workflow before EAS Build. The tracked `ios/` project means changes to native fields in `app.json` are not automatically synchronized; run Prebuild deliberately and review its diff, or maintain the corresponding Xcode configuration manually.
 3. Confirm the final bundle identifier before creating the App Store Connect record; changing ownership or identifiers later adds migration work.
 4. Create the App Store Connect app and configure EAS credentials under that same owner.
 5. Replace `[SUPPORT_EMAIL]`, `[PUBLIC_SUPPORT_URL]`, and `[PUBLIC_PRIVACY_URL]`; publish the privacy policy over HTTPS.

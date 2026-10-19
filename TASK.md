@@ -12,7 +12,7 @@ Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe b
 - [x] Taramada tam ekran animasyon; sonuç görünmeden önce en az 3,5 saniye bekleme
 - [x] Kategori inceleme, görsel grid, tekli/toplu seçim ve tahmini alan hesabı
 - [x] Kullanıcının seçimi sonrası `deleteAssetsAsync` ile iOS sistem onaylı silme isteği
-- [x] Lint, 23 birim/UI testi, Expo Doctor ve iOS Expo export paketi
+- [x] Lint, 28 birim/UI testi, Expo Doctor ve iOS Expo export paketi
 - [x] EAS preview/production yapılandırması ile gerçek cihaz ve TestFlight yayın kontrol listeleri
 - [x] Expo Go ile gerçek iPhone smoke testi: iki ekran görüntüsü seçildi, iOS sistem silme onayı verildi ve başarı sonucu görüldü
 - [x] Türkçe/İngilizce uygulama metinleri ve yerelleştirilmiş iOS Photos izin açıklamaları

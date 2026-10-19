@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import * as MediaLibrary from 'expo-media-library/legacy';
-import { Alert, Linking } from 'react-native';
+import { Alert, AppState, Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import App from './App';
 
@@ -85,6 +85,28 @@ describe('Photos permission flow', () => {
     expect(openSettings).toHaveBeenCalledTimes(1);
   });
 
+  it('refreshes Photos permission when the app returns from iOS Settings', () => {
+    let onAppStateChange;
+    const remove = jest.fn();
+    jest.spyOn(AppState, 'addEventListener').mockImplementation((_event, listener) => {
+      onAppStateChange = listener;
+      return { remove };
+    });
+    const refreshPermission = jest.fn();
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: false, canAskAgain: false, accessPrivileges: 'none' },
+      jest.fn(),
+      refreshPermission,
+    ]);
+
+    const { unmount } = render(<App />);
+    act(() => onAppStateChange('active'));
+
+    expect(refreshPermission).toHaveBeenCalledTimes(1);
+    unmount();
+    expect(remove).toHaveBeenCalledTimes(1);
+  });
+
   it('discloses limited Photos access before scanning', () => {
     MediaLibrary.usePermissions.mockReturnValue([
       { granted: true, canAskAgain: true, accessPrivileges: 'limited' },
@@ -107,6 +129,59 @@ describe('Photos permission flow', () => {
     fireEvent.press(screen.getByText('Seçimi düzenle'));
 
     expect(MediaLibrary.presentPermissionsPickerAsync).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows limited Photos access in amber in Settings', () => {
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: true, canAskAgain: true, accessPrivileges: 'limited' },
+      jest.fn(),
+    ]);
+
+    render(<App />);
+    fireEvent.press(screen.getByRole('tab', { name: 'Ayarları aç' }));
+
+    expect(screen.getByText('Sınırlı erişim')).toHaveStyle({ color: '#875D00' });
+  });
+
+  it('shows disabled Photos access in red in Settings', () => {
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: false, canAskAgain: false, accessPrivileges: 'none' },
+      jest.fn(),
+    ]);
+
+    render(<App />);
+    fireEvent.press(screen.getByRole('tab', { name: 'Ayarları aç' }));
+
+    expect(screen.getByText('Erişim kapalı')).toHaveStyle({ color: '#B42318' });
+  });
+
+  it('scans only the assets returned by a limited Photos library and keeps the disclosure visible', async () => {
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: true, canAskAgain: true, accessPrivileges: 'limited' },
+      jest.fn(),
+    ]);
+    MediaLibrary.getAssetsAsync.mockResolvedValue({
+      assets: [
+        {
+          id: 'limited-screenshot',
+          mediaType: 'photo',
+          mediaSubtypes: ['screenshot'],
+          width: 1170,
+          height: 2532,
+          uri: 'file:///limited-screenshot.jpg',
+        },
+      ],
+      endCursor: null,
+      hasNextPage: false,
+    });
+
+    render(<App />);
+    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+
+    await waitFor(() => expect(screen.getByText('1 adet')).toBeOnTheScreen());
+    expect(screen.getByText(/Sınırlı Fotoğraflar erişimi/)).toBeOnTheScreen();
+    expect(screen.getByText('Seçimi düzenle')).toBeOnTheScreen();
+    expect(MediaLibrary.getAssetsAsync).toHaveBeenCalledTimes(1);
   });
 
   it('keeps language selection in Settings and applies it to Home', () => {
@@ -179,6 +254,35 @@ describe('Photos permission flow', () => {
     expect(screen.getByText('0 incelenebilir öğe')).toBeOnTheScreen();
   });
 
+  it('replaces category descriptions with count and size after a successful scan', async () => {
+    MediaLibrary.usePermissions.mockReturnValue([
+      { granted: true, canAskAgain: true, accessPrivileges: 'all' },
+      jest.fn(),
+    ]);
+    MediaLibrary.getAssetsAsync.mockResolvedValue({
+      assets: [
+        {
+          id: 'result-screenshot',
+          mediaType: 'photo',
+          mediaSubtypes: ['screenshot'],
+          width: 1170,
+          height: 2532,
+          uri: 'file:///result-screenshot.jpg',
+        },
+      ],
+      endCursor: null,
+      hasNextPage: false,
+    });
+
+    render(<App />);
+    expect(screen.getByText('Genellikle bir kez kullanılan görseller')).toBeOnTheScreen();
+    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+
+    await waitFor(() => expect(screen.getByText('1 adet')).toBeOnTheScreen());
+    expect(screen.queryByText('Genellikle bir kez kullanılan görseller')).not.toBeOnTheScreen();
+    expect(screen.queryByText(/Tarama tamamlandı\. Bir kategori/)).not.toBeOnTheScreen();
+  });
+
   it('recovers to Home with an actionable message when scanning fails', async () => {
     MediaLibrary.usePermissions.mockReturnValue([
       { granted: true, canAskAgain: true, accessPrivileges: 'all' },
@@ -229,7 +333,7 @@ describe('Photos permission flow', () => {
 
     expect(MediaLibrary.deleteAssetsAsync).toHaveBeenCalledWith(['asset-cancelled']);
     expect(screen.getByText(/1 öğeyi sil/)).toBeOnTheScreen();
-    expect(screen.queryByText(/silinmek üzere taşındı/)).not.toBeOnTheScreen();
+    expect(screen.queryByText(/Son Silinenler’e taşındı/)).not.toBeOnTheScreen();
   });
 
   it('selects and clears every item in a category', async () => {
@@ -360,6 +464,6 @@ describe('Photos permission flow', () => {
     await act(async () => actions.find((action) => action.style === 'destructive').onPress());
 
     expect(MediaLibrary.deleteAssetsAsync).toHaveBeenCalledWith(['asset-1']);
-    expect(screen.getByText('1 öğe silinmek üzere taşındı')).toBeOnTheScreen();
+    expect(screen.getByText('1 öğe Son Silinenler’e taşındı')).toBeOnTheScreen();
   });
 });
