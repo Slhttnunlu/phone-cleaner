@@ -1094,7 +1094,7 @@ const styles = StyleSheet.create({
   localBadge: { backgroundColor: '#EAE7DE', borderRadius: 13, color: '#5E635E', fontSize: 11, fontWeight: '700', overflow: 'hidden', paddingHorizontal: 11, paddingVertical: 7 },
   heroCard: { backgroundColor: 'transparent', borderColor: 'transparent', borderRadius: 0, borderWidth: 0, minHeight: 292, overflow: 'hidden', paddingHorizontal: 2, paddingVertical: 18 },
   heroIntroCard: { minHeight: 272 },
-  heroResultCard: { backgroundColor: '#1E211E', borderRadius: 28, minHeight: 224, padding: 28 },
+  heroResultCard: { backgroundColor: '#1E211E', borderRadius: 28, minHeight: 224, paddingHorizontal: 28, paddingVertical: 24 },
   heroKicker: { color: '#52705B', fontSize: 10, fontWeight: '800', letterSpacing: 1.5 },
   heroTitle: { color: '#1E211E', fontSize: 44, fontWeight: '900', letterSpacing: -1.8, lineHeight: 46, marginTop: 11 },
   heroBody: { color: '#6D726D', fontSize: 15, lineHeight: 22, marginTop: 14, maxWidth: 320 },
