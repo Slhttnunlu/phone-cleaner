@@ -33,7 +33,7 @@ import {
 } from './src/utils/mediaPreview';
 import { categoryConfig, COPY, detectLanguage } from './src/copy';
 const PAGE_SIZE = 100;
-const MINIMUM_SCAN_DURATION_MS = 3500;
+const MINIMUM_SCAN_DURATION_MS = process.env.NODE_ENV === 'test' ? 0 : 3500;
 const LANGUAGE_STORAGE_KEY = 'phone-cleaner.language';
 const THEME_STORAGE_KEY = 'phone-cleaner.dark-mode';
 const LAUNCH_DURATION_MS = 3400;

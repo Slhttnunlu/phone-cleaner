@@ -2,6 +2,29 @@
 
 Bu senaryolar, P0 uygulaması gerçek iPhone cihazda doğrulanmadan tamamlandı sayılmaz.
 
+## Otomatik regresyon durumu — 19 Ekim 2026
+
+Toplam 23 Jest testi aşağıdaki uygulama davranışlarını doğrular:
+
+- İlk izin isteği, reddedilmiş izinde iOS Ayarlar yönlendirmesi ve sınırlı kütüphane seçicisi
+- Başarılı, boş, hatalı ve kullanıcı tarafından iptal edilen tarama durumları
+- Screenshots, büyük fotoğraf ve uzun video sınıflandırma eşikleri ile tahmini alan hesabı
+- Yerel fotoğraf/video thumbnail üretimi, thumbnail önbelleği ve iCloud varlığını indirmeden tanıma
+- Tam ekran fotoğraf önizleme, önceki/sonraki gezinme ve açık önizlemede isteğe bağlı iCloud indirme
+- Tekil seçim, tümünü seçme, seçimi kaldırma ve seçili alanın hesaplanması
+- Uygulama silme onayı, tamamlanmayan native silmede seçimi koruma, hata ve başarı sonucu
+- Kalıcı dil ve koyu görünüm tercihleri
+
+Otomatik kontroller `npm test`, `npm run lint` ve `npm run test:export:ios` komutlarıyla çalıştırılır. Native Photos izin/silme pencereleri taklit edilmez; aşağıdaki gerçek cihaz senaryoları ayrıca tamamlanır.
+
+## Kalan gerçek cihaz kapısı
+
+- iOS sistem silme penceresinde **Vazgeç** seçildiğinde başarı gösterilmediğini doğrula.
+- Sınırlı Photos erişiminde seçimi değiştirip yeniden taramayı doğrula.
+- iCloud optimize edilmiş medya için ilk ve sonraki önizleme sürelerini doğrula.
+- Boş kütüphane ve büyük kütüphane taramasını gerçek cihazda doğrula.
+- VoiceOver, büyük dinamik metin ve kontrast kontrolünü tamamla.
+
 ## İzin ve başlangıç
 
 - Fotoğraf izni ilk kez istendiğinde kullanıcıya yerel çalışma ve neden erişim gerektiği açıklanır.

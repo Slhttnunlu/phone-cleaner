@@ -2,7 +2,7 @@
 
 Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe başlamadan önce ilgili madde alt görevlere ayrılır; durum yalnızca kod ve doğrulama tamamlandığında güncellenir.
 
-## Mevcut durum — 18 Ekim 2026
+## Mevcut durum — 19 Ekim 2026
 
 ### Kodlanmış ve otomatik doğrulanmış
 
@@ -12,7 +12,7 @@ Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe b
 - [x] Taramada tam ekran animasyon; sonuç görünmeden önce en az 3,5 saniye bekleme
 - [x] Kategori inceleme, görsel grid, tekli/toplu seçim ve tahmini alan hesabı
 - [x] Kullanıcının seçimi sonrası `deleteAssetsAsync` ile iOS sistem onaylı silme isteği
-- [x] Lint, 9 birim/UI testi, Expo Doctor ve iOS Expo export paketi
+- [x] Lint, 23 birim/UI testi, Expo Doctor ve iOS Expo export paketi
 - [x] EAS preview/production yapılandırması ile gerçek cihaz ve TestFlight yayın kontrol listeleri
 - [x] Expo Go ile gerçek iPhone smoke testi: iki ekran görüntüsü seçildi, iOS sistem silme onayı verildi ve başarı sonucu görüldü
 - [x] Türkçe/İngilizce uygulama metinleri ve yerelleştirilmiş iOS Photos izin açıklamaları
@@ -57,7 +57,7 @@ Bu dosya ürün ve mühendislik işlerinin kaynak planıdır. Büyük bir işe b
 ## P0 — Kalite ve kabul
 
 - [ ] Saf sınıflandırma, sıralama, alan toplama ve grup kuralları için birim testleri yaz.
-- [ ] İzin → tarama → inceleme → sistem silme onayı öncesi akışın kalan bölümlerini UI testiyle kapsa; izin, dil ve iptal kontrolleri mevcut.
+- [x] İzin → tarama → inceleme → seçim → uygulama onayı → silme sonucu akışını UI testleriyle kapsa; iOS sistem penceresinin kendisi gerçek cihaz testinde doğrulanır.
 - [ ] Gerçek iPhone'da tam/sınırlı/reddedilmiş izin, boş kütüphane, 10.000+ varlık, iCloud optimize edilmiş medya ve silme sonrası yenileme testlerini tamamla.
 - [ ] VoiceOver, dinamik metin, kontrast, odak sırası ve minimum dokunma alanları için erişilebilirlik denetimi yap.
 - [ ] Tarama süresi, bellek, enerji ve ana iş parçacığı kullanımını ölç; kabul sınırlarını `docs/ARCHITECTURE.md` içinde kaydet.
