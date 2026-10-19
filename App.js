@@ -365,11 +365,19 @@ function AppContent() {
         <StatusBar style={darkMode ? 'light' : 'dark'} />
         <View style={styles.screen}>
           <View style={styles.headerRow}>
-            <Pressable onPress={() => setActiveCategory(null)} accessibilityRole="button">
+            <Pressable
+              style={[styles.headerAction, darkMode && styles.darkIconSurface]}
+              onPress={() => setActiveCategory(null)}
+              accessibilityRole="button"
+            >
               <Text style={[styles.backButton, darkMode && styles.darkAccentText]}>{copy.summary}</Text>
             </Pressable>
-            <Pressable onPress={selectAll} accessibilityRole="button">
-              <Text style={[styles.textButton, darkMode && styles.darkAccentText]}>
+            <Pressable
+              style={[styles.headerAction, styles.selectAllAction, darkMode && styles.darkPrimaryButton]}
+              onPress={selectAll}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.textButton, styles.selectAllActionText, darkMode && styles.darkButtonText]}>
                 {selectedIds.size === visibleAssets.length && visibleAssets.length
                   ? copy.deselectAll
                   : copy.selectAll}
@@ -580,7 +588,7 @@ function BottomTabs({ activeTab, copy, darkMode, onChange }) {
   const insets = useSafeAreaInsets();
   const tabs = [
     { key: 'home', icon: '⌂', label: copy.homeTab, accessibilityLabel: copy.homeTabLabel },
-    { key: 'settings', icon: '⚙', label: copy.settingsTab, accessibilityLabel: copy.settingsTabLabel },
+    { key: 'settings', icon: '⚙︎', label: copy.settingsTab, accessibilityLabel: copy.settingsTabLabel },
   ];
 
   return (
@@ -1122,23 +1130,26 @@ const styles = StyleSheet.create({
   limitedBannerAction: { color: '#347C4B', fontSize: 13, fontWeight: '800', marginTop: 8 },
   disabledButton: { opacity: 0.45 },
   cards: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 7 },
-  card: { alignItems: 'flex-start', backgroundColor: '#FFFFFF', borderColor: '#E5EAE4', borderRadius: 17, borderWidth: 1, flexDirection: 'column', minHeight: 138, padding: 10, position: 'relative', width: '49%' },
-  categoryIcon: { alignItems: 'center', backgroundColor: '#EEF4EE', borderRadius: 11, height: 34, justifyContent: 'center', marginBottom: 7, width: 34 },
-  categoryIconText: { color: '#347C4B', fontSize: 20, fontWeight: '700', lineHeight: 23 },
+  card: { alignItems: 'flex-start', backgroundColor: '#FFFFFF', borderColor: '#E5EAE4', borderRadius: 18, borderWidth: 1, flexDirection: 'column', minHeight: 154, padding: 13, position: 'relative', width: '49%' },
+  categoryIcon: { alignItems: 'center', backgroundColor: '#EEF4EE', borderRadius: 12, height: 40, justifyContent: 'center', marginBottom: 9, width: 40 },
+  categoryIconText: { color: '#347C4B', fontSize: 23, fontWeight: '700', lineHeight: 26 },
   cardContent: { flex: 1, paddingRight: 2 },
-  cardTitle: { color: '#17251C', flexShrink: 1, fontSize: 13, fontWeight: '800', lineHeight: 17 },
-  cardDescription: { color: '#718078', flexShrink: 1, fontSize: 10, lineHeight: 14, marginTop: 2 },
-  cardStats: { alignItems: 'flex-start', flexDirection: 'row', gap: 4, marginTop: 5 },
-  cardCount: { color: '#17301F', fontSize: 14, fontWeight: '800' },
-  cardSize: { color: '#347C4B', fontSize: 11, fontWeight: '700', marginTop: 2 },
-  cardChevron: { color: '#A9B8AC', fontSize: 20, fontWeight: '400', position: 'absolute', right: 10, top: 9 },
+  cardTitle: { color: '#17251C', flexShrink: 1, fontSize: 15, fontWeight: '800', lineHeight: 19 },
+  cardDescription: { color: '#718078', flexShrink: 1, fontSize: 12, lineHeight: 16, marginTop: 3 },
+  cardStats: { alignItems: 'flex-start', flexDirection: 'row', gap: 5, marginTop: 7 },
+  cardCount: { color: '#17301F', fontSize: 16, fontWeight: '800' },
+  cardSize: { color: '#347C4B', fontSize: 12, fontWeight: '700', marginTop: 3 },
+  cardChevron: { color: '#A9B8AC', fontSize: 22, fontWeight: '400', position: 'absolute', right: 12, top: 11 },
   cardComingSoon: { opacity: 0.78 },
   categoryIconComingSoon: { backgroundColor: '#EDF0EC' },
   developmentBadge: { alignSelf: 'flex-start', backgroundColor: '#EFF3ED', borderRadius: 9, marginTop: 5, paddingHorizontal: 6, paddingVertical: 4 },
   developmentBadgeText: { color: '#52705B', fontSize: 9, fontWeight: '800' },
   footnote: { color: '#718078', fontSize: 10, lineHeight: 13, marginTop: 'auto', paddingVertical: 3 },
   headerRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
-  backButton: { color: '#347C4B', fontSize: 16, fontWeight: '800' },
+  headerAction: { alignItems: 'center', backgroundColor: '#EEF2ED', borderRadius: 17, justifyContent: 'center', minHeight: 44, paddingHorizontal: 14 },
+  selectAllAction: { backgroundColor: '#203127' },
+  selectAllActionText: { color: '#FFFFFF' },
+  backButton: { color: '#347C4B', fontSize: 15, fontWeight: '800' },
   textButton: { color: '#347C4B', fontSize: 14, fontWeight: '800' },
   previewHint: { color: '#718078', fontSize: 12, fontWeight: '600', marginTop: 8 },
   grid: { gap: 6, paddingTop: 18, paddingBottom: 88 },
@@ -1176,10 +1187,10 @@ const styles = StyleSheet.create({
   previewSelectedButton: { backgroundColor: '#FFFFFF' },
   previewSelectButtonText: { color: '#17301F', fontSize: 16, fontWeight: '800' },
   bottomTabs: { backgroundColor: 'rgba(255,255,255,0.97)', borderColor: '#DDE3DE', borderTopWidth: 1, flexDirection: 'row', gap: 8, paddingHorizontal: 8, paddingTop: 6, paddingBottom: 5 },
-  bottomTab: { alignItems: 'center', flex: 1, gap: 2, justifyContent: 'center', minHeight: 52, paddingHorizontal: 12 },
+  bottomTab: { alignItems: 'center', flex: 1, gap: 3, justifyContent: 'center', minHeight: 58, paddingHorizontal: 12 },
   bottomTabActive: { backgroundColor: 'transparent' },
-  bottomTabIcon: { color: '#8A948D', fontSize: 20, fontWeight: '700' },
-  bottomTabText: { color: '#8A948D', fontSize: 11, fontWeight: '700' },
+  bottomTabIcon: { color: '#8A948D', fontSize: 27, fontWeight: '700', lineHeight: 29 },
+  bottomTabText: { color: '#8A948D', fontSize: 13, fontWeight: '700' },
   bottomTabTextActive: { color: '#267A4A' },
   settingsScroll: { flex: 1 },
   settingsScreen: { flexGrow: 1, padding: 20 },
