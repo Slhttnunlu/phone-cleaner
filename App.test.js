@@ -251,7 +251,7 @@ describe('Photos permission flow', () => {
     fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
 
     await waitFor(() => expect(screen.getByText(/İncelenecek ekran görüntüsü/)).toBeOnTheScreen());
-    expect(screen.getByText('0 incelenebilir öğe')).toBeOnTheScreen();
+    expect(screen.getByLabelText('0 incelenebilir öğe')).toBeOnTheScreen();
   });
 
   it('replaces category descriptions with count and size after a successful scan', async () => {

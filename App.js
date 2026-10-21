@@ -500,10 +500,21 @@ function AppContent() {
               <Text style={[styles.heroKicker, darkMode && styles.darkAccentText]}>{copy.resultKicker}</Text>
               <View style={styles.resultDashboard}>
                 <StorageOrbit bytes={scanSummary.bytes} copy={copy} darkMode={darkMode} />
-                <View style={styles.resultMetaColumn}>
+                <View
+                  style={styles.resultMetaColumn}
+                  accessible
+                  accessibilityLabel={`${scanSummary.count} ${copy.foundItemsLabel}`}
+                >
+                  <Text
+                    style={[styles.resultItemCountNumber, darkMode && styles.darkMetricText]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.72}
+                  >
+                    {scanSummary.count}
+                  </Text>
                   <Text style={[styles.resultItemCountLabel, darkMode && styles.darkPrimaryText]}>
-                    <Text style={[styles.resultItemCountNumber, darkMode && styles.darkMetricText]}>{scanSummary.count}</Text>
-                    {` ${copy.foundItemsLabel}`}
+                    {copy.foundItemsLabel}
                   </Text>
                   <View style={styles.resultReadyPill}>
                     <View style={styles.resultReadyDot} />
@@ -511,11 +522,11 @@ function AppContent() {
                   </View>
                 </View>
               </View>
-              <View style={[styles.resultMetaRow, darkMode && styles.darkDivider]}>
-                {scanMessageKey !== 'scanComplete' ? (
+              {scanMessageKey !== 'scanComplete' ? (
+                <View style={[styles.resultMetaRow, darkMode && styles.darkDivider]}>
                   <Text style={[styles.resultStatus, darkMode && styles.darkSecondaryText]}>{copy[scanMessageKey]}</Text>
-                ) : null}
-              </View>
+                </View>
+              ) : null}
             </View>
           ) : (
             <View>
@@ -1376,9 +1387,9 @@ const styles = StyleSheet.create({
   storageOrbitDot: { backgroundColor: '#F3B84B', borderColor: '#FFFFFF', borderRadius: 7, borderWidth: 3, height: 14, position: 'absolute', right: 14, top: 25, width: 14 },
   storageOrbitValue: { color: '#174A2E', fontSize: 25, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -1 },
   storageOrbitLabel: { color: '#64786C', fontSize: 9, fontWeight: '800', marginTop: 3, maxWidth: 96, textAlign: 'center' },
-  resultMetaColumn: { flex: 1 },
-  resultItemCountNumber: { color: '#2B7E4D', fontSize: 34, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -1 },
-  resultItemCountLabel: { color: '#17301F', fontSize: 14, fontWeight: '800', lineHeight: 18 },
+  resultMetaColumn: { flex: 1, minWidth: 0 },
+  resultItemCountNumber: { color: '#2B7E4D', fontSize: 34, fontVariant: ['tabular-nums'], fontWeight: '900', letterSpacing: -1, lineHeight: 40 },
+  resultItemCountLabel: { color: '#17301F', fontSize: 14, fontWeight: '800', lineHeight: 19 },
   resultReadyPill: { alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 12, flexDirection: 'row', gap: 6, marginTop: 12, paddingHorizontal: 10, paddingVertical: 8 },
   resultReadyDot: { backgroundColor: '#DFFF55', borderRadius: 4, height: 8, width: 8 },
   resultReadyText: { color: '#50665A', flex: 1, fontSize: 9, fontWeight: '700', lineHeight: 12 },
