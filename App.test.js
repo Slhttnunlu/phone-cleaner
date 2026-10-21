@@ -176,7 +176,7 @@ describe('Photos permission flow', () => {
     });
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
 
     await waitFor(() => expect(screen.getByText('1 adet')).toBeOnTheScreen());
     expect(screen.getByText(/Sınırlı Fotoğraflar erişimi/)).toBeOnTheScreen();
@@ -227,7 +227,7 @@ describe('Photos permission flow', () => {
     );
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
     fireEvent.press(screen.getByText('Taramayı iptal et'));
 
     expect(screen.getByText(/Tarama iptal edildi/)).toBeOnTheScreen();
@@ -248,7 +248,7 @@ describe('Photos permission flow', () => {
     });
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
 
     await waitFor(() => expect(screen.getByText(/İncelenecek ekran görüntüsü/)).toBeOnTheScreen());
     expect(screen.getByText('0 incelenebilir öğe')).toBeOnTheScreen();
@@ -276,7 +276,7 @@ describe('Photos permission flow', () => {
 
     render(<App />);
     expect(screen.getByText('Genellikle bir kez kullanılan görseller')).toBeOnTheScreen();
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
 
     await waitFor(() => expect(screen.getByText('1 adet')).toBeOnTheScreen());
     expect(screen.queryByText('Genellikle bir kez kullanılan görseller')).not.toBeOnTheScreen();
@@ -291,10 +291,10 @@ describe('Photos permission flow', () => {
     MediaLibrary.getAssetsAsync.mockRejectedValue(new Error('library unavailable'));
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
 
     await waitFor(() => expect(screen.getByText(/Tarama tamamlanamadı/)).toBeOnTheScreen());
-    expect(screen.getByRole('button', { name: 'Galeriyi tara' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Alanı keşfet' })).toBeEnabled();
   });
 
   it('keeps the selection when iOS does not complete deletion', async () => {
@@ -321,7 +321,7 @@ describe('Photos permission flow', () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
     await waitFor(() => expect(screen.getByText('Ekran görüntüleri')).toBeOnTheScreen());
     fireEvent.press(screen.getByText('Ekran görüntüleri'));
     await waitFor(() => expect(screen.queryAllByText('Önizleme\nhazırlanıyor')).toHaveLength(0));
@@ -356,7 +356,7 @@ describe('Photos permission flow', () => {
     MediaLibrary.getAssetInfoAsync.mockResolvedValue({ localUri: 'file:///bulk.jpg' });
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
     await waitFor(() => expect(screen.getByText('Ekran görüntüleri')).toBeOnTheScreen());
     fireEvent.press(screen.getByText('Ekran görüntüleri'));
     await waitFor(() => expect(screen.queryAllByText('Önizleme\nhazırlanıyor')).toHaveLength(0));
@@ -395,7 +395,7 @@ describe('Photos permission flow', () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
     await waitFor(() => expect(screen.getByText('Ekran görüntüleri')).toBeOnTheScreen());
     fireEvent.press(screen.getByText('Ekran görüntüleri'));
     await waitFor(() => expect(screen.queryAllByText('Önizleme\nhazırlanıyor')).toHaveLength(0));
@@ -440,7 +440,7 @@ describe('Photos permission flow', () => {
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<App />);
-    fireEvent.press(screen.getByRole('button', { name: 'Galeriyi tara' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Alanı keşfet' }));
     await waitFor(() => expect(screen.getByText('Ekran görüntüleri')).toBeOnTheScreen(), {
       timeout: 5000,
     });
